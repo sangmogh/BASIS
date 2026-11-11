@@ -1,0 +1,367 @@
+{
+  "name": "174K LNG운반선 A",
+  "type": "174K LNG CARRIER",
+  "shipType": "LNG운반선",
+  "phase": "건조 중",
+  "previousSeries": "174K LNG 4척 (2025)",
+  "blocks": {
+    "E11": "화물창",
+    "E21": "화물창 배관",
+    "A41": "거주구"
+  },
+  "processes": [
+    "절단",
+    "조립",
+    "선행 의장",
+    "도장",
+    "탑재"
+  ],
+  "blockStates": [
+    "탑재 완료",
+    "제작 완료 · 탑재 대기",
+    "제작 중",
+    "착수 전"
+  ],
+  "vessels": {
+    "H-101": {
+      "progress": 100,
+      "process": "운항 중",
+      "start": "2025-10-13",
+      "launch": "2026-07-15",
+      "processes": [
+        100,
+        100,
+        100,
+        100,
+        100
+      ],
+      "blockCounts": [
+        79,
+        0,
+        0,
+        0
+      ],
+      "milestones": [
+        {
+          "name": "착공",
+          "plan": "2025-10-13",
+          "actual": "2025-10-13"
+        },
+        {
+          "name": "탑재 시작",
+          "plan": "2026-04-24",
+          "actual": "2026-04-24"
+        }
+      ]
+    },
+    "H-102": {
+      "progress": 78,
+      "process": "탑재",
+      "start": "2025-12-18",
+      "launch": "2026-09-19",
+      "processes": [
+        94,
+        86,
+        78,
+        70,
+        62
+      ],
+      "blockCounts": [
+        49,
+        19,
+        6,
+        5
+      ],
+      "milestones": [
+        {
+          "name": "착공",
+          "plan": "2025-12-18",
+          "actual": "2025-12-18"
+        },
+        {
+          "name": "탑재 시작",
+          "plan": "2026-07-06",
+          "actual": "2026-07-06"
+        }
+      ]
+    },
+    "H-103": {
+      "progress": 68,
+      "process": "탑재",
+      "start": "2026-02-22",
+      "launch": "2026-11-24",
+      "processes": [
+        84,
+        76,
+        68,
+        60,
+        52
+      ],
+      "blockCounts": [
+        41,
+        19,
+        6,
+        13
+      ],
+      "milestones": [
+        {
+          "name": "착공",
+          "plan": "2026-02-22",
+          "actual": "2026-02-22"
+        },
+        {
+          "name": "탑재 시작",
+          "plan": "2026-09-10",
+          "actual": "2026-09-10"
+        }
+      ]
+    },
+    "H-104": {
+      "progress": 58,
+      "process": "탑재",
+      "start": "2026-04-29",
+      "launch": "2027-01-29",
+      "processes": [
+        74,
+        66,
+        58,
+        50,
+        42
+      ],
+      "blockCounts": [
+        33,
+        19,
+        6,
+        21
+      ],
+      "milestones": [
+        {
+          "name": "착공",
+          "plan": "2026-04-29",
+          "actual": "2026-04-29"
+        },
+        {
+          "name": "탑재 시작",
+          "plan": "2026-11-14"
+        }
+      ]
+    },
+    "H-105": {
+      "progress": 48,
+      "process": "탑재",
+      "start": "2026-07-04",
+      "launch": "2027-04-05",
+      "processes": [
+        64,
+        56,
+        48,
+        40,
+        32
+      ],
+      "blockCounts": [
+        25,
+        19,
+        7,
+        28
+      ],
+      "milestones": [
+        {
+          "name": "착공",
+          "plan": "2026-07-04",
+          "actual": "2026-07-04"
+        },
+        {
+          "name": "탑재 시작",
+          "plan": "2026-12-08"
+        }
+      ]
+    },
+    "H-106": {
+      "progress": 38,
+      "process": "탑재",
+      "start": "2026-09-08",
+      "launch": "2027-06-10",
+      "processes": [
+        54,
+        46,
+        38,
+        30,
+        22
+      ],
+      "blockCounts": [
+        17,
+        19,
+        7,
+        36
+      ],
+      "milestones": [
+        {
+          "name": "착공",
+          "plan": "2026-09-08",
+          "actual": "2026-09-08"
+        },
+        {
+          "name": "탑재 시작",
+          "plan": "2027-01-07"
+        }
+      ]
+    },
+    "H-107": {
+      "progress": 28,
+      "process": "탑재",
+      "start": "2026-11-13",
+      "launch": "2027-08-15",
+      "processes": [
+        44,
+        36,
+        28,
+        20,
+        12
+      ],
+      "blockCounts": [
+        9,
+        19,
+        7,
+        44
+      ],
+      "milestones": [
+        {
+          "name": "착공",
+          "plan": "2026-11-13"
+        },
+        {
+          "name": "탑재 시작",
+          "plan": "2027-02-12"
+        }
+      ]
+    },
+    "H-108": {
+      "progress": 18,
+      "process": "탑재",
+      "start": "2027-01-18",
+      "launch": "2027-10-20",
+      "processes": [
+        34,
+        26,
+        18,
+        10,
+        2
+      ],
+      "blockCounts": [
+        2,
+        19,
+        6,
+        52
+      ],
+      "milestones": [
+        {
+          "name": "착공",
+          "plan": "2027-01-18"
+        },
+        {
+          "name": "탑재 시작",
+          "plan": "2027-03-20"
+        }
+      ]
+    },
+    "H-109": {
+      "progress": 10,
+      "process": "선행 의장",
+      "start": "2027-03-25",
+      "launch": "2027-12-25",
+      "processes": [
+        24,
+        16,
+        8,
+        0,
+        0
+      ],
+      "blockCounts": [
+        0,
+        13,
+        6,
+        60
+      ],
+      "milestones": [
+        {
+          "name": "착공",
+          "plan": "2027-03-25"
+        },
+        {
+          "name": "탑재 시작",
+          "plan": "2027-04-24"
+        }
+      ]
+    },
+    "H-110": {
+      "progress": 4,
+      "process": "조립",
+      "start": "2027-05-30",
+      "launch": "2028-02-29",
+      "processes": [
+        14,
+        6,
+        0,
+        0,
+        0
+      ],
+      "blockCounts": [
+        0,
+        5,
+        6,
+        68
+      ],
+      "milestones": [
+        {
+          "name": "착공",
+          "plan": "2027-05-30"
+        },
+        {
+          "name": "탑재 시작",
+          "plan": "2027-05-28"
+        }
+      ]
+    }
+  },
+  "evidence": {
+    "handling": {
+      "재작업": "DC-014",
+      "중단 검토": "DC-015",
+      "탑재 후 재작업": "DC-012",
+      "바로 반영": "DC-004"
+    }
+  },
+  "sampleRequest": {
+    "ecr": "ECR-2026-0425",
+    "title": "연료가스 배관 드레인 포트 위치 조정",
+    "reason": "개선",
+    "requester": "배관설계팀",
+    "member": "FG-E21-18 연료가스 배관",
+    "block": "E21",
+    "v1": "드레인 포트 CL 1,200",
+    "v2": "드레인 포트 CL 1,350",
+    "material": "SUS 316L 엘보 2EA · 재고 5척분",
+    "leadTime": "3일"
+  },
+  "costs": {
+    "reworkPerDay": 150,
+    "ldPerDay": 15000,
+    "recovery": [
+      {
+        "name": "의장 잔업",
+        "days": 3,
+        "costPerDay": 300
+      },
+      {
+        "name": "시운전 병행",
+        "days": 4,
+        "costPerDay": 700
+      }
+    ]
+  },
+  "priority": [
+    "schedule",
+    "disruption",
+    "cost"
+  ]
+}

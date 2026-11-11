@@ -1,0 +1,88 @@
+/* 사례 화면 (메뉴 3) 전용. 공용 index.css는 건드리지 않고 cs- 접두어로만 쓴다 */
+.cs { display: flex; flex-direction: column; gap: 16px; }
+.cs .page-title { margin-bottom: 2px; }
+.cs-empty, .cs-loading { padding: 22px 24px; color: var(--text-mid); }
+.cs-label { color: var(--text-light); font-size: 12.5px; font-weight: 600; margin-right: 2px; }
+
+/* 검색창 · 예시 질문 */
+.cs-search { padding: 20px 22px 16px; }
+.cs-search-form { display: flex; gap: 10px; }
+.cs-search-form input {
+  flex: 1; min-width: 0; height: 48px; padding: 0 16px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--card);
+  font: inherit; font-size: 15px; color: var(--text);
+}
+.cs-search-form input:focus { outline: 3px solid var(--primary-light); border-color: var(--primary); }
+.cs-search-go {
+  flex: none; height: 48px; padding: 0 22px; border: 0; border-radius: 10px;
+  background: var(--primary); color: #fff; font-size: 15px; font-weight: 700; cursor: pointer;
+}
+.cs-search-go:disabled { opacity: .45; cursor: default; }
+.cs-examples { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; }
+.cs-examples > span { color: var(--text-light); font-size: 12.5px; font-weight: 600; margin-right: 2px; }
+.cs-examples button, .cs-refine button {
+  height: 30px; padding: 0 11px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface);
+  color: var(--text-mid); font-size: 12.5px; cursor: pointer;
+}
+.cs-examples button:hover, .cs-refine button:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+.cs-scope { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; margin-top: 12px; color: var(--text-light); font-size: 12px; }
+.cs-mode { color: var(--text-light); }
+
+/* 답 */
+.cs-answer { display: flex; flex-direction: column; gap: 12px; padding: 18px 22px; transition: opacity .15s; }
+.cs-answer.busy { opacity: .55; }
+.cs-understood { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+.cs-understood i { padding: 3px 8px; border-radius: 4px; background: var(--primary-light); color: var(--primary); font-size: 12.5px; font-style: normal; font-weight: 600; }
+.cs-understood i.missing { background: var(--warning-light); color: var(--warning); }
+.cs-understood em { color: var(--text-light); font-size: 12.5px; font-style: normal; }
+.cs-understood small { margin-left: auto; color: var(--text-light); font-size: 11.5px; }
+.cs-summary { font-size: 15px; font-weight: 600; line-height: 1.55; color: var(--text); }
+.cs-tag { display: inline-flex; align-items: center; height: 20px; margin-right: 8px; padding: 0 6px; border-radius: 4px; background: var(--surface); color: var(--text-mid); font-size: 11.5px; font-weight: 700; vertical-align: 2px; }
+.cs-tag.ai { background: var(--primary-light); color: var(--primary); }
+.cs-note { margin-top: -6px; color: var(--text-light); font-size: 12px; }
+.cs-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.cs-refine { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-top: 4px; }
+.cs-refine small { color: var(--text-light); font-size: 12px; margin-left: 4px; }
+
+/* 사례 카드 */
+.cs-card { display: flex; flex-direction: column; gap: 7px; min-width: 0; padding: 14px 15px; border: 1px solid var(--line-light); border-radius: 10px; background: var(--card); }
+.cs-card-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; }
+.cs-code { color: var(--primary); font-weight: 700; }
+.cs-timing { padding: 1px 6px; border-radius: 4px; background: var(--surface); color: var(--text-mid); font-weight: 600; }
+.cs-src { color: var(--text-light); }
+.cs-card-title { font-size: 13.5px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.cs-result { color: var(--text); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.cs-why, .cs-lesson { color: var(--text-mid); font-size: 12.5px; line-height: 1.5; }
+.cs-why b, .cs-lesson b { color: var(--text); margin-right: 3px; }
+.cs-lesson { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.cs-diff { margin: 0; padding: 7px 9px 7px 22px; border-radius: 6px; background: var(--warning-light); color: var(--warning); font-size: 12px; line-height: 1.45; }
+.cs-diff li + li { margin-top: 2px; }
+.cs-open { align-self: flex-start; padding: 0; border: 0; background: none; color: var(--primary); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.cs-open:hover { text-decoration: underline; }
+
+/* 원본 기록 */
+.cs-body { display: flex; flex-direction: column; gap: 7px; padding-top: 8px; border-top: 1px solid var(--line-light); color: var(--text-mid); font-size: 12.5px; line-height: 1.55; }
+.cs-spec s { color: var(--text-light); }
+.cs-spec b { color: var(--text); }
+.cs-problem { color: var(--text-mid); }
+.cs-results th { height: 30px; padding: 0 8px; font-size: 11.5px; }
+.cs-results td { height: 32px; padding: 0 8px; font-size: 12px; }
+.cs-synth, .cs-faint { color: var(--text-light); font-size: 11.5px; }
+
+/* 전체 사례 (접어 둠) */
+.cs-all > summary { display: flex; align-items: baseline; gap: 8px; padding: 16px 22px; cursor: pointer; font-size: 14.5px; font-weight: 700; list-style: none; }
+.cs-all > summary::-webkit-details-marker { display: none; }
+.cs-all > summary::before { content: "▸"; color: var(--text-light); }
+.cs-all[open] > summary::before { content: "▾"; }
+.cs-all > summary small { color: var(--text-light); font-size: 12.5px; font-weight: 500; }
+.cs-all-bar { display: flex; align-items: center; gap: 12px; padding: 0 22px 12px; }
+.cs-all-bar input { flex: 1; max-width: 420px; height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); font: inherit; }
+.cs-all-bar input:focus { outline: 2px solid var(--primary-light); border-color: var(--primary); }
+.cs-all-bar span { color: var(--text-light); font-size: 12.5px; }
+.cs-all-table tbody tr { cursor: pointer; }
+.cs-all-table td { padding-top: 10px; padding-bottom: 10px; height: auto; vertical-align: top; font-size: 13px; }
+.cs-all-table td strong { display: block; color: var(--text); }
+.cs-all-table td small { display: block; margin-top: 2px; color: var(--text-light); font-size: 12px; }
+.cs-all-table tr.on td { background: var(--surface); }
+.cs-all-detail td { background: var(--surface); padding: 4px 22px 16px; }
+.cs-all-detail .cs-body { border-top: 0; padding-top: 0; max-width: 900px; }

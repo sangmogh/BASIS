@@ -1,0 +1,7 @@
+[
+  { "name": "24K TEU 컨테이너선", "type": "24K TEU CONTAINER", "shipType": "컨테이너선", "vessels": "6척 · H-201~206", "phase": "건조 중", "progress": 22, "reviews": 2, "deadline": "2026-11-09" },
+  { "name": "91K VLAC 암모니아운반선", "type": "91K VLAC", "shipType": "암모니아운반선", "vessels": "4척 · H-401~404", "phase": "설계", "progress": 6, "reviews": 1, "deadline": "2026-11-14" },
+  { "name": "174K LNG운반선 B", "type": "174K LNG CARRIER", "shipType": "LNG운반선", "vessels": "4척 · H-111~114", "phase": "설계", "progress": 3, "reviews": 1, "deadline": "2026-11-20" },
+  { "name": "300K VLCC", "type": "300K VLCC", "shipType": "원유운반선", "vessels": "3척 · H-301~303", "phase": "건조 중", "progress": 58, "reviews": 0 },
+  { "name": "50K MR 탱커", "type": "50K MR TANKER", "shipType": "탱커", "vessels": "2척 · H-501~502", "phase": "인도 · 보증", "progress": 100, "reviews": 0 }
+]

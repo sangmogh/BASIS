@@ -1,0 +1,3529 @@
+# BASIS 온톨로지 · 개념 층 (TBox)
+# https://basis.local/onto
+# db/schema.sql에서 자동 생성 (npm run onto:build). 손으로 고치지 마세요.
+
+@prefix bo: <https://basis.local/onto#> .
+@prefix bc: <https://basis.local/code#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://basis.local/onto> a owl:Ontology ;
+    rdfs:label "BASIS 시리즈 호선 설계변경 온톨로지"@ko ;
+    rdfs:comment "데이터 계약(db/schema.sql)에서 자동 생성. 표는 개념, 외래키는 관계, 코드값은 SKOS 용어 체계가 된다. 한글 이름 · 연결 관계 · 부재 계층(초안)은 scripts/ontology/curated.ts에서 다듬는다."@ko ;
+    owl:versionInfo "schema.sql sha256:d83114e747dc" ;
+    dct:source "db/schema.sql" .
+bo:table a owl:AnnotationProperty ;
+    rdfs:label "DB 표"@ko .
+bo:column a owl:AnnotationProperty ;
+    rdfs:label "DB 열"@ko .
+bo:section a owl:AnnotationProperty ;
+    rdfs:label "데이터 묶음"@ko .
+bo:group a owl:AnnotationProperty ;
+    rdfs:label "주제 묶음"@ko .
+bo:sourceSystems a owl:AnnotationProperty ;
+    rdfs:label "들어오는 시스템"@ko .
+bo:codeScheme a owl:AnnotationProperty ;
+    rdfs:label "용어 체계"@ko .
+bo:derivedFrom a owl:AnnotationProperty ;
+    rdfs:label "만든 근거 개념"@ko .
+bo:draft a owl:AnnotationProperty ;
+    rdfs:label "초안"@ko .
+bo:SourcedRecord a owl:Class ;
+    rdfs:label "출처가 붙은 사실"@ko ;
+    rdfs:comment "모든 시스템 입력 행: 출처 시스템 · 확실성(확정/잠정/사례/가정) · 알게 된 시각 · 합성 여부가 붙는다"@ko .
+bo:SeriesCommon a owl:Class ;
+    rdfs:label "시리즈 공통"@ko ;
+    rdfs:comment "시리즈의 모든 호선이 함께 쓰는 정보 (도면 · 부품 · 자재 · 견적 · 설계안). 한 번만 조사한다"@ko .
+bo:PerHull a owl:Class ;
+    rdfs:label "호선마다 다름"@ko ;
+    rdfs:comment "호선마다 다른 상태 · 일정 · 위치. 호선별 차이만 본다. 호선 표까지 NOT NULL 외래키로 이어지는 개념"@ko ;
+    owl:disjointWith bo:SeriesCommon .
+bo:sourceSystem a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "출처 시스템"@ko ;
+    rdfs:domain bo:SourcedRecord ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.source_system ;
+    bo:column "source_system" .
+bo:certainty a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "확실성"@ko ;
+    rdfs:domain bo:SourcedRecord ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.certainty ;
+    bo:column "certainty" .
+bo:knownAt a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "알게 된 시각"@ko ;
+    rdfs:domain bo:SourcedRecord ;
+    rdfs:range xsd:dateTime ;
+    bo:column "known_at" .
+bo:synthetic a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "합성 데이터"@ko ;
+    rdfs:domain bo:SourcedRecord ;
+    rdfs:range xsd:boolean ;
+    bo:column "synthetic" .
+bo:Dataset a owl:Class ;
+    rdfs:label "데이터셋"@ko ;
+    bo:table "dataset" ;
+    bo:section "메타 · 코드값"@ko ;
+    bo:group "메타 · 코드값"@ko .
+bo:Dataset.id bo:column "dataset.dataset_id" ;
+    rdfs:domain bo:Dataset ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "dataset_id" .
+bo:Dataset.name bo:column "dataset.name" ;
+    rdfs:domain bo:Dataset ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "name" .
+bo:Dataset.series bo:column "dataset.series_id" ;
+    rdfs:domain bo:Dataset ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "series_id" .
+bo:Dataset.asOf bo:column "dataset.as_of" ;
+    rdfs:domain bo:Dataset ;
+    rdfs:comment "이 데이터셋의 '지금' (시연 시계의 기준)"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "as_of" .
+bo:Dataset.dateRangeConvention bo:column "dataset.date_range_convention" ;
+    rdfs:domain bo:Dataset ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "date_range_convention" .
+bo:Dataset.contractVersion bo:column "dataset.contract_version" ;
+    rdfs:domain bo:Dataset ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "contract_version" .
+bo:Dataset.builtFrom bo:column "dataset.built_from" ;
+    rdfs:domain bo:Dataset ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "built_from" .
+bo:Dataset.note bo:column "dataset.note" ;
+    rdfs:domain bo:Dataset ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "note" .
+bo:Code a owl:Class ;
+    rdfs:label "code"@ko ;
+    bo:table "code" ;
+    bo:section "메타 · 코드값"@ko ;
+    bo:group "메타 · 코드값"@ko .
+bo:Code.codeType bo:column "code.code_type" ;
+    rdfs:domain bo:Code ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "code_type" .
+bo:Code.code bo:column "code.code" ;
+    rdfs:domain bo:Code ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "code" .
+bo:Code.labelKo bo:column "code.label_ko" ;
+    rdfs:domain bo:Code ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "label_ko" .
+bo:Code.sortOrder bo:column "code.sort_order" ;
+    rdfs:domain bo:Code ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "sort_order" ;
+    rdfs:range xsd:integer .
+bo:Zone a owl:Class ;
+    rdfs:label "구역"@ko ;
+    rdfs:comment "화면 구역 (예: E21). 블록의 속성이지 블록이 아니다"@ko ;
+    bo:table "zone" ;
+    bo:section "메타 · 코드값"@ko ;
+    bo:group "메타 · 코드값"@ko .
+bo:Zone.zoneCode bo:column "zone.zone_code" ;
+    rdfs:domain bo:Zone ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "zone_code" .
+bo:Zone.nameKo bo:column "zone.name_ko" ;
+    rdfs:domain bo:Zone ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "name_ko" .
+bo:Zone.zoneKind bo:column "zone.zone_kind" ;
+    rdfs:domain bo:Zone ;
+    rdfs:comment "code: zone_kind (사례의 '어디서'와 같은 말)"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "구역 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.zone_kind .
+bo:Department a owl:Class ;
+    rdfs:label "부서"@ko ;
+    bo:table "department" ;
+    bo:section "메타 · 코드값"@ko ;
+    bo:group "메타 · 코드값"@ko .
+bo:Department.departmentCode bo:column "department.department_code" ;
+    rdfs:domain bo:Department ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "department_code" .
+bo:Department.nameKo bo:column "department.name_ko" ;
+    rdfs:domain bo:Department ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "name_ko" .
+bo:Department.roleCode bo:column "department.role_code" ;
+    rdfs:domain bo:Department ;
+    rdfs:comment "code: role (사내 직무 10개 중 하나, 이름은 HD현대 기준)"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "사내 직무"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.role .
+bo:Employee a owl:Class ;
+    rdfs:label "직원"@ko ;
+    bo:table "employee" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "사람 · 조직"@ko ;
+    bo:sourceSystems "인사 · ERP" ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:Employee.departmentCode ; owl:someValuesFrom bo:Department ] .
+bo:Employee.id bo:column "employee.employee_id" ;
+    rdfs:domain bo:Employee ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "employee_id" .
+bo:Employee.name bo:column "employee.name" ;
+    rdfs:domain bo:Employee ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "name" .
+bo:Employee.departmentCode bo:column "employee.department_code" ;
+    rdfs:domain bo:Employee ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부서"@ko ;
+    rdfs:range bo:Department .
+bo:Employee.roleCode bo:column "employee.role_code" ;
+    rdfs:domain bo:Employee ;
+    rdfs:comment "code: role"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "사내 직무"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.role .
+bo:Employee.title bo:column "employee.title" ;
+    rdfs:domain bo:Employee ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "title" .
+bo:Employee.isDepartmentHead bo:column "employee.is_department_head" ;
+    rdfs:domain bo:Employee ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "is_department_head" ;
+    rdfs:range xsd:boolean .
+bo:Employee.active bo:column "employee.active" ;
+    rdfs:domain bo:Employee ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "active" ;
+    rdfs:range xsd:boolean .
+bo:Counterparty a owl:Class ;
+    rdfs:label "회사 밖 상대"@ko ;
+    rdfs:comment "회사 밖 상대: 선주 · 선급 · 협력사 · 공급사"@ko ;
+    bo:table "counterparty" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "사람 · 조직"@ko ;
+    bo:sourceSystems "인사 · ERP" ;
+    rdfs:subClassOf bo:SourcedRecord .
+bo:Counterparty.id bo:column "counterparty.counterparty_id" ;
+    rdfs:domain bo:Counterparty ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "counterparty_id" .
+bo:Counterparty.kind bo:column "counterparty.kind" ;
+    rdfs:domain bo:Counterparty ;
+    rdfs:comment "code: counterparty_kind"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "상대 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.counterparty_kind .
+bo:Counterparty.name bo:column "counterparty.name" ;
+    rdfs:domain bo:Counterparty ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "name" .
+bo:Counterparty.contactEmployee bo:column "counterparty.contact_employee_id" ;
+    rdfs:domain bo:Counterparty ;
+    rdfs:comment "우리 쪽 창구"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원 (contact_employee_id)"@ko ;
+    rdfs:range bo:Employee .
+bo:Series a owl:Class ;
+    rdfs:label "시리즈"@ko ;
+    bo:table "series" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "시리즈 · 호선"@ko ;
+    bo:sourceSystems "ERP · PLM · 계약" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord .
+bo:Series.id bo:column "series.series_id" ;
+    rdfs:domain bo:Series ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "series_id" .
+bo:Series.name bo:column "series.name" ;
+    rdfs:domain bo:Series ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "name" .
+bo:Series.shipType bo:column "series.ship_type" ;
+    rdfs:domain bo:Series ;
+    rdfs:comment "code: ship_type"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "선종"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.ship_type .
+bo:Series.yardName bo:column "series.yard_name" ;
+    rdfs:domain bo:Series ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "yard_name" .
+bo:Series.owner bo:column "series.owner_id" ;
+    rdfs:domain bo:Series ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "회사 밖 상대 (owner_id)"@ko ;
+    rdfs:range bo:Counterparty .
+bo:Series.classSociety bo:column "series.class_society_id" ;
+    rdfs:domain bo:Series ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "회사 밖 상대 (class_society_id)"@ko ;
+    rdfs:range bo:Counterparty .
+bo:Hull a owl:Class ;
+    rdfs:label "호선"@ko ;
+    bo:table "hull" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "시리즈 · 호선"@ko ;
+    bo:sourceSystems "ERP · PLM · 계약" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:Hull.series ; owl:someValuesFrom bo:Series ] .
+bo:Hull.id bo:column "hull.hull_id" ;
+    rdfs:domain bo:Hull ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "hull_id" .
+bo:Hull.series bo:column "hull.series_id" ;
+    rdfs:domain bo:Hull ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "시리즈"@ko ;
+    rdfs:range bo:Series .
+bo:Hull.hullNo bo:column "hull.hull_no" ;
+    rdfs:domain bo:Hull ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "hull_no" .
+bo:Hull.hullSeq bo:column "hull.hull_seq" ;
+    rdfs:domain bo:Hull ;
+    rdfs:comment "시리즈 안 순번 (1호선 = 1)"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "hull_seq" ;
+    rdfs:range xsd:integer .
+bo:Hull.lifecycleStatus bo:column "hull.lifecycle_status" ;
+    rdfs:domain bo:Hull ;
+    rdfs:comment "code: lifecycle_status"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선 단계"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.lifecycle_status .
+bo:Hull.plannedDeliveryDate bo:column "hull.planned_delivery_date" ;
+    rdfs:domain bo:Hull ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "planned_delivery_date" .
+bo:Hull.actualDeliveryDate bo:column "hull.actual_delivery_date" ;
+    rdfs:domain bo:Hull ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "actual_delivery_date" .
+bo:HullContract a owl:Class ;
+    rdfs:label "계약 납기"@ko ;
+    rdfs:comment "계약 납기 · 지체상금. 없으면 hull_delivery_path의 여유 → 여유 0(가정)"@ko ;
+    bo:table "hull_contract" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "시리즈 · 호선"@ko ;
+    bo:sourceSystems "ERP · PLM · 계약" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:HullContract.hull ; owl:someValuesFrom bo:Hull ] .
+bo:HullContract.hull bo:column "hull_contract.hull_id" ;
+    rdfs:domain bo:HullContract ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:HullContract.contractDeliveryDate bo:column "hull_contract.contract_delivery_date" ;
+    rdfs:domain bo:HullContract ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "contract_delivery_date" .
+bo:HullContract.ldPerDayKrw bo:column "hull_contract.ld_per_day_krw" ;
+    rdfs:domain bo:HullContract ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "ld_per_day_krw" ;
+    rdfs:range xsd:integer .
+bo:HullContract.ldCapKrw bo:column "hull_contract.ld_cap_krw" ;
+    rdfs:domain bo:HullContract ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "ld_cap_krw" ;
+    rdfs:range xsd:integer .
+bo:HullDeliveryPath a owl:Class ;
+    rdfs:label "인도 경로 · 공정 여유"@ko ;
+    rdfs:comment "변경 부품 설치 → 인도까지의 경로와 공정 여유"@ko ;
+    bo:table "hull_delivery_path" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "시리즈 · 호선"@ko ;
+    bo:sourceSystems "ERP · PLM · 계약" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:HullDeliveryPath.hull ; owl:someValuesFrom bo:Hull ] .
+bo:HullDeliveryPath.hull bo:column "hull_delivery_path.hull_id" ;
+    rdfs:domain bo:HullDeliveryPath ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:HullDeliveryPath.componentInstallFinish bo:column "hull_delivery_path.component_install_finish" ;
+    rdfs:domain bo:HullDeliveryPath ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "component_install_finish" .
+bo:HullDeliveryPath.integrationDays bo:column "hull_delivery_path.integration_days" ;
+    rdfs:domain bo:HullDeliveryPath ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "integration_days" ;
+    rdfs:range xsd:integer .
+bo:HullDeliveryPath.acceptanceDays bo:column "hull_delivery_path.acceptance_days" ;
+    rdfs:domain bo:HullDeliveryPath ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "acceptance_days" ;
+    rdfs:range xsd:integer .
+bo:HullDeliveryPath.floatDays bo:column "hull_delivery_path.float_days" ;
+    rdfs:domain bo:HullDeliveryPath ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "float_days" ;
+    rdfs:range xsd:integer .
+bo:HullMilestone a owl:Class ;
+    rdfs:label "호선 마일스톤"@ko ;
+    bo:table "hull_milestone" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "시리즈 · 호선"@ko ;
+    bo:sourceSystems "ERP · PLM · 계약" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:HullMilestone.hull ; owl:someValuesFrom bo:Hull ] .
+bo:HullMilestone.hull bo:column "hull_milestone.hull_id" ;
+    rdfs:domain bo:HullMilestone ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:HullMilestone.milestone bo:column "hull_milestone.milestone" ;
+    rdfs:domain bo:HullMilestone ;
+    rdfs:comment "code: milestone"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "마일스톤"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.milestone .
+bo:HullMilestone.plannedDate bo:column "hull_milestone.planned_date" ;
+    rdfs:domain bo:HullMilestone ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "planned_date" .
+bo:HullMilestone.actualDate bo:column "hull_milestone.actual_date" ;
+    rdfs:domain bo:HullMilestone ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "actual_date" .
+bo:HullProgress a owl:Class ;
+    rdfs:label "공정 진척"@ko ;
+    bo:table "hull_progress" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "시리즈 · 호선"@ko ;
+    bo:sourceSystems "ERP · PLM · 계약" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:HullProgress.hull ; owl:someValuesFrom bo:Hull ] .
+bo:HullProgress.hull bo:column "hull_progress.hull_id" ;
+    rdfs:domain bo:HullProgress ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:HullProgress.process bo:column "hull_progress.process" ;
+    rdfs:domain bo:HullProgress ;
+    rdfs:comment "code: process"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "공정"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.process .
+bo:HullProgress.progressPct bo:column "hull_progress.progress_pct" ;
+    rdfs:domain bo:HullProgress ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "progress_pct" ;
+    rdfs:range xsd:integer .
+bo:HullProgress.asOf bo:column "hull_progress.as_of" ;
+    rdfs:domain bo:HullProgress ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "as_of" .
+bo:Block a owl:Class ;
+    rdfs:label "블록"@ko ;
+    rdfs:comment "물리 블록. 계산과 화면의 묶음 단위"@ko ;
+    bo:table "block" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "블록 · 공정 일정"@ko ;
+    bo:sourceSystems "MES · APS" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:Block.hull ; owl:someValuesFrom bo:Hull ] .
+bo:Block.id bo:column "block.block_id" ;
+    rdfs:domain bo:Block ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "block_id" .
+bo:Block.hull bo:column "block.hull_id" ;
+    rdfs:domain bo:Block ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:Block.blockCode bo:column "block.block_code" ;
+    rdfs:domain bo:Block ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "block_code" .
+bo:Block.locationArea bo:column "block.location_area" ;
+    rdfs:domain bo:Block ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "location_area" .
+bo:Block.zoneCode bo:column "block.zone_code" ;
+    rdfs:domain bo:Block ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "구역"@ko ;
+    rdfs:range bo:Zone .
+bo:Block.builder bo:column "block.builder_id" ;
+    rdfs:domain bo:Block ;
+    rdfs:comment "비우면 사내 제작, 있으면 협력사"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "회사 밖 상대 (builder_id)"@ko ;
+    rdfs:range bo:Counterparty .
+bo:BlockWindow a owl:Class ;
+    rdfs:label "블록 제작 · 설치 기간"@ko ;
+    rdfs:comment "블록 안 부품의 제작 · 설치 기간 [시작, 끝)"@ko ;
+    bo:table "block_window" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "블록 · 공정 일정"@ko ;
+    bo:sourceSystems "MES · APS" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:BlockWindow.block ; owl:someValuesFrom bo:Block ] .
+bo:BlockWindow.block bo:column "block_window.block_id" ;
+    rdfs:domain bo:BlockWindow ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "블록"@ko ;
+    rdfs:range bo:Block .
+bo:BlockWindow.fabricationStart bo:column "block_window.fabrication_start" ;
+    rdfs:domain bo:BlockWindow ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "fabrication_start" .
+bo:BlockWindow.fabricationFinish bo:column "block_window.fabrication_finish" ;
+    rdfs:domain bo:BlockWindow ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "fabrication_finish" .
+bo:BlockWindow.installStart bo:column "block_window.install_start" ;
+    rdfs:domain bo:BlockWindow ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "install_start" .
+bo:BlockWindow.installFinish bo:column "block_window.install_finish" ;
+    rdfs:domain bo:BlockWindow ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "install_finish" .
+bo:Part a owl:Class ;
+    rdfs:label "부품"@ko ;
+    bo:table "part" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "부품 · 도면"@ko ;
+    bo:sourceSystems "PLM · CAD" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord .
+bo:Part.id bo:column "part.part_id" ;
+    rdfs:domain bo:Part ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "part_id" .
+bo:Part.partCode bo:column "part.part_code" ;
+    rdfs:domain bo:Part ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "part_code" .
+bo:Part.nameKo bo:column "part.name_ko" ;
+    rdfs:domain bo:Part ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "name_ko" .
+bo:Part.partKind bo:column "part.part_kind" ;
+    rdfs:domain bo:Part ;
+    rdfs:comment "code: part_kind (사례의 '무엇이'와 같은 말)"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부재 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.part_kind .
+bo:Part.workType bo:column "part.work_type" ;
+    rdfs:domain bo:Part ;
+    rdfs:comment "code: work_type"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "공종"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.work_type .
+bo:Part.uom bo:column "part.uom" ;
+    rdfs:domain bo:Part ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "uom" .
+bo:PartRevision a owl:Class ;
+    rdfs:label "부품 개정 · 도면"@ko ;
+    bo:table "part_revision" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "부품 · 도면"@ko ;
+    bo:sourceSystems "PLM · CAD" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:PartRevision.part ; owl:someValuesFrom bo:Part ] .
+bo:PartRevision.revision bo:column "part_revision.revision_id" ;
+    rdfs:domain bo:PartRevision ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "revision_id" .
+bo:PartRevision.part bo:column "part_revision.part_id" ;
+    rdfs:domain bo:PartRevision ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품"@ko ;
+    rdfs:range bo:Part .
+bo:PartRevision.revisionCode bo:column "part_revision.revision_code" ;
+    rdfs:domain bo:PartRevision ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "revision_code" .
+bo:PartRevision.drawingNo bo:column "part_revision.drawing_no" ;
+    rdfs:domain bo:PartRevision ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "drawing_no" .
+bo:PartRevision.releaseState bo:column "part_revision.release_state" ;
+    rdfs:domain bo:PartRevision ;
+    rdfs:comment "code: release_state"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "배포 상태"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.release_state .
+bo:PartRevision.specText bo:column "part_revision.spec_text" ;
+    rdfs:domain bo:PartRevision ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "spec_text" .
+bo:PartRevision.releasedAt bo:column "part_revision.released_at" ;
+    rdfs:domain bo:PartRevision ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "released_at" .
+bo:PartOccurrence a owl:Class ;
+    rdfs:label "호선별 부품 위치"@ko ;
+    rdfs:comment "호선 · 블록 · 위치마다 놓인 부품"@ko ;
+    bo:table "part_occurrence" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "부품 · 도면"@ko ;
+    bo:sourceSystems "PLM · CAD" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:PartOccurrence.hull ; owl:someValuesFrom bo:Hull ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:PartOccurrence.block ; owl:someValuesFrom bo:Block ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:PartOccurrence.part ; owl:someValuesFrom bo:Part ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:PartOccurrence.baselineRevision ; owl:someValuesFrom bo:PartRevision ] .
+bo:PartOccurrence.occurrence bo:column "part_occurrence.occurrence_id" ;
+    rdfs:domain bo:PartOccurrence ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "occurrence_id" .
+bo:PartOccurrence.hull bo:column "part_occurrence.hull_id" ;
+    rdfs:domain bo:PartOccurrence ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:PartOccurrence.block bo:column "part_occurrence.block_id" ;
+    rdfs:domain bo:PartOccurrence ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "블록"@ko ;
+    rdfs:range bo:Block .
+bo:PartOccurrence.part bo:column "part_occurrence.part_id" ;
+    rdfs:domain bo:PartOccurrence ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품"@ko ;
+    rdfs:range bo:Part .
+bo:PartOccurrence.locationCode bo:column "part_occurrence.location_code" ;
+    rdfs:domain bo:PartOccurrence ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "location_code" .
+bo:PartOccurrence.baselineRevision bo:column "part_occurrence.baseline_revision_id" ;
+    rdfs:domain bo:PartOccurrence ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품 개정 · 도면 (baseline_revision_id)"@ko ;
+    rdfs:range bo:PartRevision .
+bo:PartOccurrence.requiredQty bo:column "part_occurrence.required_qty" ;
+    rdfs:domain bo:PartOccurrence ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "required_qty" ;
+    rdfs:range xsd:decimal .
+bo:ProductionItem a owl:Class ;
+    rdfs:label "생산 품목"@ko ;
+    bo:table "production_item" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "부품 상태"@ko ;
+    bo:sourceSystems "MES" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ProductionItem.hull ; owl:someValuesFrom bo:Hull ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ProductionItem.occurrence ; owl:someValuesFrom bo:PartOccurrence ] .
+bo:ProductionItem.id bo:column "production_item.production_item_id" ;
+    rdfs:domain bo:ProductionItem ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "production_item_id" .
+bo:ProductionItem.hull bo:column "production_item.hull_id" ;
+    rdfs:domain bo:ProductionItem ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:ProductionItem.occurrence bo:column "production_item.occurrence_id" ;
+    rdfs:domain bo:ProductionItem ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선별 부품 위치"@ko ;
+    rdfs:range bo:PartOccurrence .
+bo:ProductionItem.productionCode bo:column "production_item.production_code" ;
+    rdfs:domain bo:ProductionItem ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "production_code" .
+bo:ProductionItem.plannedQty bo:column "production_item.planned_qty" ;
+    rdfs:domain bo:ProductionItem ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "planned_qty" ;
+    rdfs:range xsd:decimal .
+bo:ProductionItem.uom bo:column "production_item.uom" ;
+    rdfs:domain bo:ProductionItem ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "uom" .
+bo:ResourceGroup a owl:Class ;
+    rdfs:label "작업장"@ko ;
+    rdfs:comment "작업장 (예: 의장 작업반)"@ko ;
+    bo:table "resource_group" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "부품 상태"@ko ;
+    bo:sourceSystems "MES" ;
+    rdfs:subClassOf bo:SourcedRecord .
+bo:ResourceGroup.resourceGroup bo:column "resource_group.resource_group" ;
+    rdfs:domain bo:ResourceGroup ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "resource_group" .
+bo:ResourceGroup.nameKo bo:column "resource_group.name_ko" ;
+    rdfs:domain bo:ResourceGroup ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "name_ko" .
+bo:ResourceGroup.roleCode bo:column "resource_group.role_code" ;
+    rdfs:domain bo:ResourceGroup ;
+    rdfs:comment "code: role"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "사내 직무"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.role .
+bo:ResourceGroup.foremanEmployee bo:column "resource_group.foreman_employee_id" ;
+    rdfs:domain bo:ResourceGroup ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원 (foreman_employee_id)"@ko ;
+    rdfs:range bo:Employee .
+bo:ResourceAvailability a owl:Class ;
+    rdfs:label "작업장 여력"@ko ;
+    rdfs:comment "작업장 여력 (남는 시간). 만회 수단 계산에 쓴다"@ko ;
+    bo:table "resource_availability" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "부품 상태"@ko ;
+    bo:sourceSystems "MES" ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ResourceAvailability.resourceGroup ; owl:someValuesFrom bo:ResourceGroup ] .
+bo:ResourceAvailability.resourceGroup bo:column "resource_availability.resource_group" ;
+    rdfs:domain bo:ResourceAvailability ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "작업장"@ko ;
+    rdfs:range bo:ResourceGroup .
+bo:ResourceAvailability.calendarDate bo:column "resource_availability.calendar_date" ;
+    rdfs:domain bo:ResourceAvailability ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "calendar_date" .
+bo:ResourceAvailability.availableHours bo:column "resource_availability.available_hours" ;
+    rdfs:domain bo:ResourceAvailability ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "available_hours" ;
+    rdfs:range xsd:decimal .
+bo:Operation a owl:Class ;
+    rdfs:label "작업"@ko ;
+    rdfs:comment "부품 단위 제작 · 설치 작업 [planned_start, planned_finish)"@ko ;
+    bo:table "operation" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "부품 상태"@ko ;
+    bo:sourceSystems "MES" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:Operation.hull ; owl:someValuesFrom bo:Hull ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:Operation.productionItem ; owl:someValuesFrom bo:ProductionItem ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:Operation.resourceGroup ; owl:someValuesFrom bo:ResourceGroup ] .
+bo:Operation.id bo:column "operation.operation_id" ;
+    rdfs:domain bo:Operation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "operation_id" .
+bo:Operation.hull bo:column "operation.hull_id" ;
+    rdfs:domain bo:Operation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:Operation.productionItem bo:column "operation.production_item_id" ;
+    rdfs:domain bo:Operation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "생산 품목"@ko ;
+    rdfs:range bo:ProductionItem .
+bo:Operation.operationType bo:column "operation.operation_type" ;
+    rdfs:domain bo:Operation ;
+    rdfs:comment "code: operation_type"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "작업 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.operation_type .
+bo:Operation.resourceGroup bo:column "operation.resource_group" ;
+    rdfs:domain bo:Operation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "작업장"@ko ;
+    rdfs:range bo:ResourceGroup .
+bo:Operation.plannedStart bo:column "operation.planned_start" ;
+    rdfs:domain bo:Operation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "planned_start" .
+bo:Operation.plannedFinish bo:column "operation.planned_finish" ;
+    rdfs:domain bo:Operation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "planned_finish" .
+bo:Operation.plannedLaborHours bo:column "operation.planned_labor_hours" ;
+    rdfs:domain bo:Operation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "planned_labor_hours" ;
+    rdfs:range xsd:decimal .
+bo:OperationDependency a owl:Class ;
+    rdfs:label "작업 선후"@ko ;
+    bo:table "operation_dependency" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "부품 상태"@ko ;
+    bo:sourceSystems "MES" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:OperationDependency.successor ; owl:someValuesFrom bo:Operation ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:OperationDependency.predecessor ; owl:someValuesFrom bo:Operation ] .
+bo:OperationDependency.successor bo:column "operation_dependency.successor_id" ;
+    rdfs:domain bo:OperationDependency ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "작업 (successor_id)"@ko ;
+    rdfs:range bo:Operation .
+bo:OperationDependency.predecessor bo:column "operation_dependency.predecessor_id" ;
+    rdfs:domain bo:OperationDependency ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "작업 (predecessor_id)"@ko ;
+    rdfs:range bo:Operation .
+bo:OperationDependency.dependencyType bo:column "operation_dependency.dependency_type" ;
+    rdfs:domain bo:OperationDependency ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "dependency_type" .
+bo:WorkOrder a owl:Class ;
+    rdfs:label "작업지시"@ko ;
+    rdfs:comment "3단 검증: instruction_revision_id = 작업지시가 따르는 도면 개정"@ko ;
+    bo:table "work_order" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "부품 상태"@ko ;
+    bo:sourceSystems "MES" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:WorkOrder.operation ; owl:someValuesFrom bo:Operation ] .
+bo:WorkOrder.id bo:column "work_order.work_order_id" ;
+    rdfs:domain bo:WorkOrder ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "work_order_id" .
+bo:WorkOrder.operation bo:column "work_order.operation_id" ;
+    rdfs:domain bo:WorkOrder ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "작업"@ko ;
+    rdfs:range bo:Operation .
+bo:WorkOrder.issuedAt bo:column "work_order.issued_at" ;
+    rdfs:domain bo:WorkOrder ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "issued_at" .
+bo:WorkOrder.instructionRevision bo:column "work_order.instruction_revision_id" ;
+    rdfs:domain bo:WorkOrder ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품 개정 · 도면 (instruction_revision_id)"@ko ;
+    rdfs:range bo:PartRevision .
+bo:WorkOrder.status bo:column "work_order.status" ;
+    rdfs:domain bo:WorkOrder ;
+    rdfs:comment "code: work_order_status"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "작업지시 상태"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.work_order_status .
+bo:ProductionEvent a owl:Class ;
+    rdfs:label "생산 실적"@ko ;
+    rdfs:comment "3단 검증: observed_revision_id = 실제로 만든 · 단 개정"@ko ;
+    bo:table "production_event" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "부품 상태"@ko ;
+    bo:sourceSystems "MES" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ProductionEvent.productionItem ; owl:someValuesFrom bo:ProductionItem ] .
+bo:ProductionEvent.event bo:column "production_event.event_id" ;
+    rdfs:domain bo:ProductionEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "event_id" .
+bo:ProductionEvent.productionItem bo:column "production_event.production_item_id" ;
+    rdfs:domain bo:ProductionEvent ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "생산 품목"@ko ;
+    rdfs:range bo:ProductionItem .
+bo:ProductionEvent.workOrder bo:column "production_event.work_order_id" ;
+    rdfs:domain bo:ProductionEvent ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "작업지시"@ko ;
+    rdfs:range bo:WorkOrder .
+bo:ProductionEvent.eventKind bo:column "production_event.event_kind" ;
+    rdfs:domain bo:ProductionEvent ;
+    rdfs:comment "code: production_event_kind"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "생산 실적 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.production_event_kind .
+bo:ProductionEvent.observedRevision bo:column "production_event.observed_revision_id" ;
+    rdfs:domain bo:ProductionEvent ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품 개정 · 도면 (observed_revision_id)"@ko ;
+    rdfs:range bo:PartRevision .
+bo:ProductionEvent.qty bo:column "production_event.qty" ;
+    rdfs:domain bo:ProductionEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "qty" ;
+    rdfs:range xsd:decimal .
+bo:ProductionEvent.occurredAt bo:column "production_event.occurred_at" ;
+    rdfs:domain bo:ProductionEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "occurred_at" .
+bo:ProductionEvent.recordedAt bo:column "production_event.recorded_at" ;
+    rdfs:domain bo:ProductionEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "recorded_at" .
+bo:ProductionEvent.voidsEvent bo:column "production_event.voids_event_id" ;
+    rdfs:domain bo:ProductionEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "voids_event_id" .
+bo:Inspection a owl:Class ;
+    rdfs:label "검사"@ko ;
+    bo:table "inspection" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "부품 상태"@ko ;
+    bo:sourceSystems "MES" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:Inspection.productionItem ; owl:someValuesFrom bo:ProductionItem ] .
+bo:Inspection.id bo:column "inspection.inspection_id" ;
+    rdfs:domain bo:Inspection ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "inspection_id" .
+bo:Inspection.productionItem bo:column "inspection.production_item_id" ;
+    rdfs:domain bo:Inspection ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "생산 품목"@ko ;
+    rdfs:range bo:ProductionItem .
+bo:Inspection.relatedEvent bo:column "inspection.related_event_id" ;
+    rdfs:domain bo:Inspection ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "생산 실적 (related_event_id)"@ko ;
+    rdfs:range bo:ProductionEvent .
+bo:Inspection.inspectionType bo:column "inspection.inspection_type" ;
+    rdfs:domain bo:Inspection ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "inspection_type" .
+bo:Inspection.result bo:column "inspection.result" ;
+    rdfs:domain bo:Inspection ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "result" .
+bo:Inspection.inspectedAt bo:column "inspection.inspected_at" ;
+    rdfs:domain bo:Inspection ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "inspected_at" .
+bo:Inspection.recordedAt bo:column "inspection.recorded_at" ;
+    rdfs:domain bo:Inspection ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "recorded_at" .
+bo:DesignChange a owl:Class ;
+    rdfs:label "설계변경"@ko ;
+    bo:table "change" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "설계변경"@ko ;
+    bo:sourceSystems "PLM" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:DesignChange.series ; owl:someValuesFrom bo:Series ] .
+bo:DesignChange.id bo:column "change.change_id" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "change_id" .
+bo:DesignChange.series bo:column "change.series_id" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "시리즈"@ko ;
+    rdfs:range bo:Series .
+bo:DesignChange.ecrCode bo:column "change.ecr_code" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "ecr_code" .
+bo:DesignChange.title bo:column "change.title" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "title" .
+bo:DesignChange.reason bo:column "change.reason" ;
+    rdfs:domain bo:DesignChange ;
+    rdfs:comment "code: reason"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "변경 사유"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.reason .
+bo:DesignChange.changeTypes bo:column "change.change_types" ;
+    rdfs:domain bo:DesignChange ;
+    rdfs:comment "JSON 배열, code: change_type"@ko ;
+    a owl:ObjectProperty ;
+    rdfs:label "변경 유형"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.change_type .
+bo:DesignChange.mandatory bo:column "change.mandatory" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "mandatory" ;
+    rdfs:range xsd:boolean .
+bo:DesignChange.postDeliveryAllowed bo:column "change.post_delivery_allowed" ;
+    rdfs:domain bo:DesignChange ;
+    rdfs:comment "인도 후 개조로 미뤄도 되나 (0이면 범위 조정안을 만들지 않음)"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "post_delivery_allowed" ;
+    rdfs:range xsd:boolean .
+bo:DesignChange.source bo:column "change.source" ;
+    rdfs:domain bo:DesignChange ;
+    rdfs:comment "code: change_source (plm / manual)"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "변경 출처"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.change_source .
+bo:DesignChange.requestedByKind bo:column "change.requested_by_kind" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "requested_by_kind" .
+bo:DesignChange.requestedBy bo:column "change.requested_by_id" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "requested_by_id" .
+bo:DesignChange.registeredBy bo:column "change.registered_by" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원 (registered_by)"@ko ;
+    rdfs:range bo:Employee .
+bo:DesignChange.receivedAt bo:column "change.received_at" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "received_at" .
+bo:DesignChange.detectedHull bo:column "change.detected_hull_id" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선 (detected_hull_id)"@ko ;
+    rdfs:range bo:Hull .
+bo:DesignChange.zoneCode bo:column "change.zone_code" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "구역"@ko ;
+    rdfs:range bo:Zone .
+bo:DesignChange.drawingNo bo:column "change.drawing_no" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "drawing_no" .
+bo:DesignChange.revisionBefore bo:column "change.revision_before" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "revision_before" .
+bo:DesignChange.revisionAfter bo:column "change.revision_after" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "revision_after" .
+bo:DesignChange.specBefore bo:column "change.spec_before" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "spec_before" .
+bo:DesignChange.specAfter bo:column "change.spec_after" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "spec_after" .
+bo:DesignChange.originalText bo:column "change.original_text" ;
+    rdfs:domain bo:DesignChange ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "original_text" .
+bo:DesignChange.status bo:column "change.status" ;
+    rdfs:domain bo:DesignChange ;
+    rdfs:comment "code: change_status"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "변경 상태"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.change_status .
+bo:ChangeAffectedPart a owl:Class ;
+    rdfs:label "변경 대상 부품"@ko ;
+    rdfs:comment "변경이 건드리는 부품. 도면만 바뀌는 변경은 행이 없다"@ko ;
+    bo:table "change_affected_part" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "설계변경"@ko ;
+    bo:sourceSystems "PLM" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ChangeAffectedPart.change ; owl:someValuesFrom bo:DesignChange ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ChangeAffectedPart.part ; owl:someValuesFrom bo:Part ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ChangeAffectedPart.revisionBefore ; owl:someValuesFrom bo:PartRevision ] .
+bo:ChangeAffectedPart.change bo:column "change_affected_part.change_id" ;
+    rdfs:domain bo:ChangeAffectedPart ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:ChangeAffectedPart.part bo:column "change_affected_part.part_id" ;
+    rdfs:domain bo:ChangeAffectedPart ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품"@ko ;
+    rdfs:range bo:Part .
+bo:ChangeAffectedPart.revisionBefore bo:column "change_affected_part.revision_before" ;
+    rdfs:domain bo:ChangeAffectedPart ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품 개정 · 도면 (revision_before)"@ko ;
+    rdfs:range bo:PartRevision .
+bo:ChangeAffectedPart.revisionAfter bo:column "change_affected_part.revision_after" ;
+    rdfs:domain bo:ChangeAffectedPart ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품 개정 · 도면 (revision_after)"@ko ;
+    rdfs:range bo:PartRevision .
+bo:ChangeAffectedPart.qtyChange bo:column "change_affected_part.qty_change" ;
+    rdfs:domain bo:ChangeAffectedPart ;
+    rdfs:comment "호선당 수량 변화 (+ 추가 / − 삭제)"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "qty_change" ;
+    rdfs:range xsd:decimal .
+bo:ChangeAffectedPart.appliesFromHull bo:column "change_affected_part.applies_from_hull" ;
+    rdfs:domain bo:ChangeAffectedPart ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선 (applies_from_hull)"@ko ;
+    rdfs:range bo:Hull .
+bo:ChangeHullScope a owl:Class ;
+    rdfs:label "호선별 적용 범위"@ko ;
+    bo:table "change_hull_scope" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "설계변경"@ko ;
+    bo:sourceSystems "PLM" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ChangeHullScope.change ; owl:someValuesFrom bo:DesignChange ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ChangeHullScope.hull ; owl:someValuesFrom bo:Hull ] .
+bo:ChangeHullScope.change bo:column "change_hull_scope.change_id" ;
+    rdfs:domain bo:ChangeHullScope ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:ChangeHullScope.hull bo:column "change_hull_scope.hull_id" ;
+    rdfs:domain bo:ChangeHullScope ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:ChangeHullScope.scopeState bo:column "change_hull_scope.scope_state" ;
+    rdfs:domain bo:ChangeHullScope ;
+    rdfs:comment "code: scope_state"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "적용 범위"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.scope_state .
+bo:ChangeHullScope.reason bo:column "change_hull_scope.reason" ;
+    rdfs:domain bo:ChangeHullScope ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "reason" .
+bo:EngineeringSolution a owl:Class ;
+    rdfs:label "설계안"@ko ;
+    rdfs:comment "설계안: 새 부품으로 교체 / 기존 부품 보강. 보강안이 있는 부품만 C가 된다"@ko ;
+    bo:table "engineering_solution" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "설계변경"@ko ;
+    bo:sourceSystems "PLM" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:EngineeringSolution.change ; owl:someValuesFrom bo:DesignChange ] .
+bo:EngineeringSolution.solution bo:column "engineering_solution.solution_id" ;
+    rdfs:domain bo:EngineeringSolution ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "solution_id" .
+bo:EngineeringSolution.change bo:column "engineering_solution.change_id" ;
+    rdfs:domain bo:EngineeringSolution ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:EngineeringSolution.kind bo:column "engineering_solution.kind" ;
+    rdfs:domain bo:EngineeringSolution ;
+    rdfs:comment "code: solution_kind"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계안 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.solution_kind .
+bo:EngineeringSolution.description bo:column "engineering_solution.description" ;
+    rdfs:domain bo:EngineeringSolution ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "description" .
+bo:EngineeringSolution.technicalState bo:column "engineering_solution.technical_state" ;
+    rdfs:domain bo:EngineeringSolution ;
+    rdfs:comment "code: approval_state"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "승인 상태"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.approval_state .
+bo:EngineeringSolution.qualityState bo:column "engineering_solution.quality_state" ;
+    rdfs:domain bo:EngineeringSolution ;
+    rdfs:comment "code: approval_state"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "승인 상태"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.approval_state .
+bo:EngineeringSolution.classState bo:column "engineering_solution.class_state" ;
+    rdfs:domain bo:EngineeringSolution ;
+    rdfs:comment "code: approval_state (approved가 아니면 '선급 승인' 할 일이 생긴다)"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "승인 상태"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.approval_state .
+bo:EngineeringSolution.confirmedAt bo:column "engineering_solution.confirmed_at" ;
+    rdfs:domain bo:EngineeringSolution ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "confirmed_at" .
+bo:SolutionTarget a owl:Class ;
+    rdfs:label "설계안 적용 위치"@ko ;
+    rdfs:comment "설계안이 적용되는 부품 위치"@ko ;
+    bo:table "solution_target" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "설계변경"@ko ;
+    bo:sourceSystems "PLM" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:SolutionTarget.solution ; owl:someValuesFrom bo:EngineeringSolution ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:SolutionTarget.occurrence ; owl:someValuesFrom bo:PartOccurrence ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:SolutionTarget.part ; owl:someValuesFrom bo:Part ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:SolutionTarget.fromRevision ; owl:someValuesFrom bo:PartRevision ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:SolutionTarget.toRevision ; owl:someValuesFrom bo:PartRevision ] .
+bo:SolutionTarget.solution bo:column "solution_target.solution_id" ;
+    rdfs:domain bo:SolutionTarget ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계안"@ko ;
+    rdfs:range bo:EngineeringSolution .
+bo:SolutionTarget.occurrence bo:column "solution_target.occurrence_id" ;
+    rdfs:domain bo:SolutionTarget ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선별 부품 위치"@ko ;
+    rdfs:range bo:PartOccurrence .
+bo:SolutionTarget.part bo:column "solution_target.part_id" ;
+    rdfs:domain bo:SolutionTarget ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품"@ko ;
+    rdfs:range bo:Part .
+bo:SolutionTarget.fromRevision bo:column "solution_target.from_revision_id" ;
+    rdfs:domain bo:SolutionTarget ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품 개정 · 도면 (from_revision_id)"@ko ;
+    rdfs:range bo:PartRevision .
+bo:SolutionTarget.toRevision bo:column "solution_target.to_revision_id" ;
+    rdfs:domain bo:SolutionTarget ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품 개정 · 도면 (to_revision_id)"@ko ;
+    rdfs:range bo:PartRevision .
+bo:SolutionTarget.deltaKind bo:column "solution_target.delta_kind" ;
+    rdfs:domain bo:SolutionTarget ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "delta_kind" .
+bo:SolutionTarget.qtyChange bo:column "solution_target.qty_change" ;
+    rdfs:domain bo:SolutionTarget ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "qty_change" ;
+    rdfs:range xsd:decimal .
+bo:SolutionTarget.conditionNote bo:column "solution_target.condition_note" ;
+    rdfs:domain bo:SolutionTarget ;
+    rdfs:comment "예: 위치별 확인 필요 (조건부)"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "condition_note" .
+bo:Material a owl:Class ;
+    rdfs:label "자재"@ko ;
+    bo:table "material" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "자재 · 견적 · 발주"@ko ;
+    bo:sourceSystems "ERP" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord .
+bo:Material.id bo:column "material.material_id" ;
+    rdfs:domain bo:Material ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "material_id" .
+bo:Material.materialCode bo:column "material.material_code" ;
+    rdfs:domain bo:Material ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "material_code" .
+bo:Material.nameKo bo:column "material.name_ko" ;
+    rdfs:domain bo:Material ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "name_ko" .
+bo:Material.specification bo:column "material.specification" ;
+    rdfs:domain bo:Material ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "specification" .
+bo:Material.uom bo:column "material.uom" ;
+    rdfs:domain bo:Material ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "uom" .
+bo:ChangeMaterial a owl:Class ;
+    rdfs:label "변경 자재"@ko ;
+    rdfs:comment "변경으로 더하거나 빼는 자재와 재고 · 미입고 발주 · 표준 조달 기간"@ko ;
+    bo:table "change_material" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "자재 · 견적 · 발주"@ko ;
+    bo:sourceSystems "ERP" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ChangeMaterial.change ; owl:someValuesFrom bo:DesignChange ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ChangeMaterial.material ; owl:someValuesFrom bo:Material ] .
+bo:ChangeMaterial.change bo:column "change_material.change_id" ;
+    rdfs:domain bo:ChangeMaterial ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:ChangeMaterial.material bo:column "change_material.material_id" ;
+    rdfs:domain bo:ChangeMaterial ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "자재"@ko ;
+    rdfs:range bo:Material .
+bo:ChangeMaterial.action bo:column "change_material.action" ;
+    rdfs:domain bo:ChangeMaterial ;
+    rdfs:comment "code: material_action"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "자재 동작"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.material_action .
+bo:ChangeMaterial.qtyPerHull bo:column "change_material.qty_per_hull" ;
+    rdfs:domain bo:ChangeMaterial ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "qty_per_hull" ;
+    rdfs:range xsd:decimal .
+bo:ChangeMaterial.uom bo:column "change_material.uom" ;
+    rdfs:domain bo:ChangeMaterial ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "uom" .
+bo:ChangeMaterial.stockQty bo:column "change_material.stock_qty" ;
+    rdfs:domain bo:ChangeMaterial ;
+    rdfs:comment "지금 쓸 수 있는 재고"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "stock_qty" ;
+    rdfs:range xsd:decimal .
+bo:ChangeMaterial.openOrderQty bo:column "change_material.open_order_qty" ;
+    rdfs:domain bo:ChangeMaterial ;
+    rdfs:comment "발주했지만 아직 안 들어온 수량"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "open_order_qty" ;
+    rdfs:range xsd:decimal .
+bo:ChangeMaterial.standardLeadDays bo:column "change_material.standard_lead_days" ;
+    rdfs:domain bo:ChangeMaterial ;
+    rdfs:comment "견적 납기가 없을 때 쓰는 표준 조달 기간"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "standard_lead_days" ;
+    rdfs:range xsd:integer .
+bo:SupplierQuote a owl:Class ;
+    rdfs:label "견적"@ko ;
+    bo:table "supplier_quote" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "자재 · 견적 · 발주"@ko ;
+    bo:sourceSystems "ERP" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:SupplierQuote.change ; owl:someValuesFrom bo:DesignChange ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:SupplierQuote.supplier ; owl:someValuesFrom bo:Counterparty ] .
+bo:SupplierQuote.quote bo:column "supplier_quote.quote_id" ;
+    rdfs:domain bo:SupplierQuote ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "quote_id" .
+bo:SupplierQuote.change bo:column "supplier_quote.change_id" ;
+    rdfs:domain bo:SupplierQuote ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:SupplierQuote.supplier bo:column "supplier_quote.supplier_id" ;
+    rdfs:domain bo:SupplierQuote ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "회사 밖 상대 (supplier_id)"@ko ;
+    rdfs:range bo:Counterparty .
+bo:SupplierQuote.channel bo:column "supplier_quote.channel" ;
+    rdfs:domain bo:SupplierQuote ;
+    rdfs:comment "code: quote_channel (A/B/C 규칙이 이 열로 견적을 고른다)"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "조달 경로"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.quote_channel .
+bo:SupplierQuote.receivedAt bo:column "supplier_quote.received_at" ;
+    rdfs:domain bo:SupplierQuote ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "received_at" .
+bo:SupplierQuote.validUntil bo:column "supplier_quote.valid_until" ;
+    rdfs:domain bo:SupplierQuote ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "valid_until" .
+bo:SupplierQuote.quoteState bo:column "supplier_quote.quote_state" ;
+    rdfs:domain bo:SupplierQuote ;
+    rdfs:comment "code: quote_state"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "견적 상태"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.quote_state .
+bo:SupplierQuote.supersedesQuote bo:column "supplier_quote.supersedes_quote_id" ;
+    rdfs:domain bo:SupplierQuote ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "견적 (supersedes_quote_id)"@ko ;
+    rdfs:range bo:SupplierQuote .
+bo:SupplierQuoteLine a owl:Class ;
+    rdfs:label "견적 품목"@ko ;
+    bo:table "supplier_quote_line" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "자재 · 견적 · 발주"@ko ;
+    bo:sourceSystems "ERP" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:SupplierQuoteLine.quote ; owl:someValuesFrom bo:SupplierQuote ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:SupplierQuoteLine.material ; owl:someValuesFrom bo:Material ] .
+bo:SupplierQuoteLine.quoteLine bo:column "supplier_quote_line.quote_line_id" ;
+    rdfs:domain bo:SupplierQuoteLine ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "quote_line_id" .
+bo:SupplierQuoteLine.quote bo:column "supplier_quote_line.quote_id" ;
+    rdfs:domain bo:SupplierQuoteLine ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "견적"@ko ;
+    rdfs:range bo:SupplierQuote .
+bo:SupplierQuoteLine.lineNo bo:column "supplier_quote_line.line_no" ;
+    rdfs:domain bo:SupplierQuoteLine ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "line_no" ;
+    rdfs:range xsd:integer .
+bo:SupplierQuoteLine.material bo:column "supplier_quote_line.material_id" ;
+    rdfs:domain bo:SupplierQuoteLine ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "자재"@ko ;
+    rdfs:range bo:Material .
+bo:SupplierQuoteLine.offeredQty bo:column "supplier_quote_line.offered_qty" ;
+    rdfs:domain bo:SupplierQuoteLine ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "offered_qty" ;
+    rdfs:range xsd:decimal .
+bo:SupplierQuoteLine.unitPriceKrw bo:column "supplier_quote_line.unit_price_krw" ;
+    rdfs:domain bo:SupplierQuoteLine ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "unit_price_krw" ;
+    rdfs:range xsd:integer .
+bo:SupplierQuoteLine.deliveryDate bo:column "supplier_quote_line.delivery_date" ;
+    rdfs:domain bo:SupplierQuoteLine ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "delivery_date" .
+bo:SupplierQuoteLine.commitmentState bo:column "supplier_quote_line.commitment_state" ;
+    rdfs:domain bo:SupplierQuoteLine ;
+    rdfs:comment "code: commitment_state"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "확약 상태"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.commitment_state .
+bo:PurchaseOrder a owl:Class ;
+    rdfs:label "발주"@ko ;
+    bo:table "purchase_order" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "자재 · 견적 · 발주"@ko ;
+    bo:sourceSystems "ERP" ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:PurchaseOrder.supplier ; owl:someValuesFrom bo:Counterparty ] .
+bo:PurchaseOrder.po bo:column "purchase_order.po_id" ;
+    rdfs:domain bo:PurchaseOrder ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "po_id" .
+bo:PurchaseOrder.supplier bo:column "purchase_order.supplier_id" ;
+    rdfs:domain bo:PurchaseOrder ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "회사 밖 상대 (supplier_id)"@ko ;
+    rdfs:range bo:Counterparty .
+bo:PurchaseOrder.issuedAt bo:column "purchase_order.issued_at" ;
+    rdfs:domain bo:PurchaseOrder ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "issued_at" .
+bo:PurchaseOrder.status bo:column "purchase_order.status" ;
+    rdfs:domain bo:PurchaseOrder ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "status" .
+bo:PurchaseLine a owl:Class ;
+    rdfs:label "발주 품목"@ko ;
+    bo:table "purchase_line" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "자재 · 견적 · 발주"@ko ;
+    bo:sourceSystems "ERP" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:PurchaseLine.po ; owl:someValuesFrom bo:PurchaseOrder ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:PurchaseLine.material ; owl:someValuesFrom bo:Material ] .
+bo:PurchaseLine.poLine bo:column "purchase_line.po_line_id" ;
+    rdfs:domain bo:PurchaseLine ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "po_line_id" .
+bo:PurchaseLine.po bo:column "purchase_line.po_id" ;
+    rdfs:domain bo:PurchaseLine ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "발주"@ko ;
+    rdfs:range bo:PurchaseOrder .
+bo:PurchaseLine.lineNo bo:column "purchase_line.line_no" ;
+    rdfs:domain bo:PurchaseLine ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "line_no" ;
+    rdfs:range xsd:integer .
+bo:PurchaseLine.material bo:column "purchase_line.material_id" ;
+    rdfs:domain bo:PurchaseLine ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "자재"@ko ;
+    rdfs:range bo:Material .
+bo:PurchaseLine.orderedQty bo:column "purchase_line.ordered_qty" ;
+    rdfs:domain bo:PurchaseLine ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "ordered_qty" ;
+    rdfs:range xsd:decimal .
+bo:PurchaseLine.unitPriceKrw bo:column "purchase_line.unit_price_krw" ;
+    rdfs:domain bo:PurchaseLine ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "unit_price_krw" ;
+    rdfs:range xsd:integer .
+bo:PoSchedule a owl:Class ;
+    rdfs:label "납기 일정"@ko ;
+    bo:table "po_schedule" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "자재 · 견적 · 발주"@ko ;
+    bo:sourceSystems "ERP" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:PoSchedule.poLine ; owl:someValuesFrom bo:PurchaseLine ] .
+bo:PoSchedule.scheduleRecord bo:column "po_schedule.schedule_record_id" ;
+    rdfs:domain bo:PoSchedule ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "schedule_record_id" .
+bo:PoSchedule.poLine bo:column "po_schedule.po_line_id" ;
+    rdfs:domain bo:PoSchedule ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "발주 품목"@ko ;
+    rdfs:range bo:PurchaseLine .
+bo:PoSchedule.scheduleNo bo:column "po_schedule.schedule_no" ;
+    rdfs:domain bo:PoSchedule ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "schedule_no" ;
+    rdfs:range xsd:integer .
+bo:PoSchedule.revisionNo bo:column "po_schedule.revision_no" ;
+    rdfs:domain bo:PoSchedule ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "revision_no" ;
+    rdfs:range xsd:integer .
+bo:PoSchedule.scheduledQty bo:column "po_schedule.scheduled_qty" ;
+    rdfs:domain bo:PoSchedule ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "scheduled_qty" ;
+    rdfs:range xsd:decimal .
+bo:PoSchedule.scheduledDeliveryDate bo:column "po_schedule.scheduled_delivery_date" ;
+    rdfs:domain bo:PoSchedule ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "scheduled_delivery_date" .
+bo:PoSchedule.confirmedQty bo:column "po_schedule.confirmed_qty" ;
+    rdfs:domain bo:PoSchedule ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "confirmed_qty" ;
+    rdfs:range xsd:decimal .
+bo:PoSchedule.confirmedDeliveryDate bo:column "po_schedule.confirmed_delivery_date" ;
+    rdfs:domain bo:PoSchedule ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "confirmed_delivery_date" .
+bo:PoSchedule.confirmationState bo:column "po_schedule.confirmation_state" ;
+    rdfs:domain bo:PoSchedule ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "confirmation_state" .
+bo:GoodsReceipt a owl:Class ;
+    rdfs:label "입고"@ko ;
+    bo:table "goods_receipt" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "자재 · 견적 · 발주"@ko ;
+    bo:sourceSystems "ERP" ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:GoodsReceipt.poLine ; owl:someValuesFrom bo:PurchaseLine ] .
+bo:GoodsReceipt.receipt bo:column "goods_receipt.receipt_id" ;
+    rdfs:domain bo:GoodsReceipt ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "receipt_id" .
+bo:GoodsReceipt.poLine bo:column "goods_receipt.po_line_id" ;
+    rdfs:domain bo:GoodsReceipt ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "발주 품목"@ko ;
+    rdfs:range bo:PurchaseLine .
+bo:GoodsReceipt.qty bo:column "goods_receipt.qty" ;
+    rdfs:domain bo:GoodsReceipt ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "qty" ;
+    rdfs:range xsd:decimal .
+bo:GoodsReceipt.receivedAt bo:column "goods_receipt.received_at" ;
+    rdfs:domain bo:GoodsReceipt ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "received_at" .
+bo:GoodsReceipt.recordedAt bo:column "goods_receipt.recorded_at" ;
+    rdfs:domain bo:GoodsReceipt ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "recorded_at" .
+bo:GoodsReceipt.usabilityState bo:column "goods_receipt.usability_state" ;
+    rdfs:domain bo:GoodsReceipt ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "usability_state" .
+bo:MaterialAllocation a owl:Class ;
+    rdfs:label "자재 할당"@ko ;
+    bo:table "material_allocation" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "자재 · 견적 · 발주"@ko ;
+    bo:sourceSystems "ERP" ;
+    rdfs:subClassOf bo:PerHull ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:MaterialAllocation.poLine ; owl:someValuesFrom bo:PurchaseLine ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:MaterialAllocation.hull ; owl:someValuesFrom bo:Hull ] .
+bo:MaterialAllocation.allocation bo:column "material_allocation.allocation_id" ;
+    rdfs:domain bo:MaterialAllocation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "allocation_id" .
+bo:MaterialAllocation.poLine bo:column "material_allocation.po_line_id" ;
+    rdfs:domain bo:MaterialAllocation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "발주 품목"@ko ;
+    rdfs:range bo:PurchaseLine .
+bo:MaterialAllocation.receipt bo:column "material_allocation.receipt_id" ;
+    rdfs:domain bo:MaterialAllocation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "입고"@ko ;
+    rdfs:range bo:GoodsReceipt .
+bo:MaterialAllocation.hull bo:column "material_allocation.hull_id" ;
+    rdfs:domain bo:MaterialAllocation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:MaterialAllocation.productionItem bo:column "material_allocation.production_item_id" ;
+    rdfs:domain bo:MaterialAllocation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "생산 품목"@ko ;
+    rdfs:range bo:ProductionItem .
+bo:MaterialAllocation.qty bo:column "material_allocation.qty" ;
+    rdfs:domain bo:MaterialAllocation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "qty" ;
+    rdfs:range xsd:decimal .
+bo:MaterialAllocation.allocationStage bo:column "material_allocation.allocation_stage" ;
+    rdfs:domain bo:MaterialAllocation ;
+    rdfs:comment "reserved / issued / consumed"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "allocation_stage" .
+bo:ProjectAssignment a owl:Class ;
+    rdfs:label "프로젝트 조직표"@ko ;
+    rdfs:comment "주관자(시리즈 담당 공정관리) · PM. hull_id가 있으면 그 호선만 (호선 값이 시리즈 값보다 먼저)"@ko ;
+    bo:table "project_assignment" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "프로젝트 조직표 · 담당 관계"@ko ;
+    rdfs:subClassOf bo:SeriesCommon ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ProjectAssignment.series ; owl:someValuesFrom bo:Series ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ProjectAssignment.employee ; owl:someValuesFrom bo:Employee ] .
+bo:ProjectAssignment.assignment bo:column "project_assignment.assignment_id" ;
+    rdfs:domain bo:ProjectAssignment ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "assignment_id" .
+bo:ProjectAssignment.series bo:column "project_assignment.series_id" ;
+    rdfs:domain bo:ProjectAssignment ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "시리즈"@ko ;
+    rdfs:range bo:Series .
+bo:ProjectAssignment.hull bo:column "project_assignment.hull_id" ;
+    rdfs:domain bo:ProjectAssignment ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:ProjectAssignment.assignmentRole bo:column "project_assignment.assignment_role" ;
+    rdfs:domain bo:ProjectAssignment ;
+    rdfs:comment "code: assignment_role"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "조직표 역할"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.assignment_role .
+bo:ProjectAssignment.employee bo:column "project_assignment.employee_id" ;
+    rdfs:domain bo:ProjectAssignment ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원"@ko ;
+    rdfs:range bo:Employee .
+bo:ProjectAssignment.validFrom bo:column "project_assignment.valid_from" ;
+    rdfs:domain bo:ProjectAssignment ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "valid_from" .
+bo:ProjectAssignment.validTo bo:column "project_assignment.valid_to" ;
+    rdfs:domain bo:ProjectAssignment ;
+    rdfs:comment "비우면 지금도 맡고 있음 (인사 이동이면 닫고 새 행)"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "valid_to" .
+bo:Responsibility a owl:Class ;
+    rdfs:label "담당 관계"@ko ;
+    rdfs:comment "시스템의 담당 관계: 자재→구매, 블록→반장, 부품(도면)→설계자"@ko ;
+    bo:table "responsibility" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "프로젝트 조직표 · 담당 관계"@ko ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:Responsibility.employee ; owl:someValuesFrom bo:Employee ] .
+bo:Responsibility.id bo:column "responsibility.responsibility_id" ;
+    rdfs:domain bo:Responsibility ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "responsibility_id" .
+bo:Responsibility.objectType bo:column "responsibility.object_type" ;
+    rdfs:domain bo:Responsibility ;
+    rdfs:comment "code: responsibility_object"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "담당 대상 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.responsibility_object .
+bo:Responsibility.object bo:column "responsibility.object_id" ;
+    rdfs:domain bo:Responsibility ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "object_id" .
+bo:Responsibility.roleCode bo:column "responsibility.role_code" ;
+    rdfs:domain bo:Responsibility ;
+    rdfs:comment "code: role"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "사내 직무"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.role .
+bo:Responsibility.employee bo:column "responsibility.employee_id" ;
+    rdfs:domain bo:Responsibility ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원"@ko ;
+    rdfs:range bo:Employee .
+bo:Responsibility.validFrom bo:column "responsibility.valid_from" ;
+    rdfs:domain bo:Responsibility ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "valid_from" .
+bo:Responsibility.validTo bo:column "responsibility.valid_to" ;
+    rdfs:domain bo:Responsibility ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "valid_to" .
+bo:OwnerPreference a owl:Class ;
+    rdfs:label "선주 우선순위"@ko ;
+    bo:table "owner_preference" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "선주 우선순위"@ko ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:OwnerPreference.change ; owl:someValuesFrom bo:DesignChange ] .
+bo:OwnerPreference.preference bo:column "owner_preference.preference_id" ;
+    rdfs:domain bo:OwnerPreference ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "preference_id" .
+bo:OwnerPreference.change bo:column "owner_preference.change_id" ;
+    rdfs:domain bo:OwnerPreference ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:OwnerPreference.criterion bo:column "owner_preference.criterion" ;
+    rdfs:domain bo:OwnerPreference ;
+    rdfs:comment "code: owner_criterion"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "선주 우선순위 기준"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.owner_criterion .
+bo:OwnerPreference.priorityRank bo:column "owner_preference.priority_rank" ;
+    rdfs:domain bo:OwnerPreference ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "priority_rank" ;
+    rdfs:range xsd:integer .
+bo:OwnerPreference.validFrom bo:column "owner_preference.valid_from" ;
+    rdfs:domain bo:OwnerPreference ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "valid_from" .
+bo:PastCase a owl:Class ;
+    rdfs:label "과거 사례"@ko ;
+    bo:table "case_record" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "과거 사례"@ko ;
+    rdfs:subClassOf bo:SourcedRecord .
+bo:PastCase.case bo:column "case_record.case_id" ;
+    rdfs:domain bo:PastCase ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "case_id" .
+bo:PastCase.title bo:column "case_record.title" ;
+    rdfs:domain bo:PastCase ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "title" .
+bo:PastCase.partKind bo:column "case_record.part_kind" ;
+    rdfs:domain bo:PastCase ;
+    rdfs:comment "code: part_kind"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부재 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.part_kind .
+bo:PastCase.workType bo:column "case_record.work_type" ;
+    rdfs:domain bo:PastCase ;
+    rdfs:comment "code: work_type"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "공종"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.work_type .
+bo:PastCase.changeTypes bo:column "case_record.change_types" ;
+    rdfs:domain bo:PastCase ;
+    rdfs:comment "JSON 배열, code: change_type"@ko ;
+    a owl:ObjectProperty ;
+    rdfs:label "변경 유형"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.change_type .
+bo:PastCase.zoneKind bo:column "case_record.zone_kind" ;
+    rdfs:domain bo:PastCase ;
+    rdfs:comment "code: zone_kind"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "구역 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.zone_kind .
+bo:PastCase.reason bo:column "case_record.reason" ;
+    rdfs:domain bo:PastCase ;
+    rdfs:comment "code: reason"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "변경 사유"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.reason .
+bo:PastCase.timing bo:column "case_record.timing" ;
+    rdfs:domain bo:PastCase ;
+    rdfs:comment "code: timing"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "반영 시점"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.timing .
+bo:PastCase.sourceHullText bo:column "case_record.source_hull_text" ;
+    rdfs:domain bo:PastCase ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "source_hull_text" .
+bo:PastCase.originalText bo:column "case_record.original_text" ;
+    rdfs:domain bo:PastCase ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "original_text" .
+bo:PastCase.specBefore bo:column "case_record.spec_before" ;
+    rdfs:domain bo:PastCase ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "spec_before" .
+bo:PastCase.specAfter bo:column "case_record.spec_after" ;
+    rdfs:domain bo:PastCase ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "spec_after" .
+bo:PastCase.maxLocalDelayDays bo:column "case_record.max_local_delay_days" ;
+    rdfs:domain bo:PastCase ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "max_local_delay_days" ;
+    rdfs:range xsd:integer .
+bo:PastCase.deliveryDelayDays bo:column "case_record.delivery_delay_days" ;
+    rdfs:domain bo:PastCase ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "delivery_delay_days" ;
+    rdfs:range xsd:integer .
+bo:PastCase.problem bo:column "case_record.problem" ;
+    rdfs:domain bo:PastCase ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "problem" .
+bo:PastCase.lesson bo:column "case_record.lesson" ;
+    rdfs:domain bo:PastCase ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "lesson" .
+bo:PastCase.occurredAt bo:column "case_record.occurred_at" ;
+    rdfs:domain bo:PastCase ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "occurred_at" .
+bo:CaseHullResult a owl:Class ;
+    rdfs:label "사례 호선별 처리"@ko ;
+    bo:table "case_hull_result" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "과거 사례"@ko ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:CaseHullResult.case ; owl:someValuesFrom bo:PastCase ] .
+bo:CaseHullResult.result bo:column "case_hull_result.result_id" ;
+    rdfs:domain bo:CaseHullResult ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "result_id" .
+bo:CaseHullResult.case bo:column "case_hull_result.case_id" ;
+    rdfs:domain bo:CaseHullResult ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "과거 사례"@ko ;
+    rdfs:range bo:PastCase .
+bo:CaseHullResult.sourceHullText bo:column "case_hull_result.source_hull_text" ;
+    rdfs:domain bo:CaseHullResult ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "source_hull_text" .
+bo:CaseHullResult.handling bo:column "case_hull_result.handling" ;
+    rdfs:domain bo:CaseHullResult ;
+    rdfs:comment "code: handling"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "처리 방법"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.handling .
+bo:CaseHullResult.actualDurationDays bo:column "case_hull_result.actual_duration_days" ;
+    rdfs:domain bo:CaseHullResult ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "actual_duration_days" ;
+    rdfs:range xsd:integer .
+bo:CaseHullResult.actualCostKrw bo:column "case_hull_result.actual_cost_krw" ;
+    rdfs:domain bo:CaseHullResult ;
+    rdfs:comment "비용의 사례 중간값을 여기서 구한다"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "actual_cost_krw" ;
+    rdfs:range xsd:integer .
+bo:CaseHullResult.payer bo:column "case_hull_result.payer" ;
+    rdfs:domain bo:CaseHullResult ;
+    rdfs:comment "code: payer"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부담 주체"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.payer .
+bo:CaseHullResult.note bo:column "case_hull_result.note" ;
+    rdfs:domain bo:CaseHullResult ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "note" .
+bo:CaseParticipant a owl:Class ;
+    rdfs:label "사례 관여자"@ko ;
+    bo:table "case_participant" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "과거 사례"@ko ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:CaseParticipant.case ; owl:someValuesFrom bo:PastCase ] .
+bo:CaseParticipant.case bo:column "case_participant.case_id" ;
+    rdfs:domain bo:CaseParticipant ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "과거 사례"@ko ;
+    rdfs:range bo:PastCase .
+bo:CaseParticipant.partyKind bo:column "case_participant.party_kind" ;
+    rdfs:domain bo:CaseParticipant ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "party_kind" .
+bo:CaseParticipant.partyCode bo:column "case_participant.party_code" ;
+    rdfs:domain bo:CaseParticipant ;
+    rdfs:comment "code: role 또는 counterparty_kind"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "사내 직무"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.role .
+bo:CaseParticipant.reasonText bo:column "case_participant.reason_text" ;
+    rdfs:domain bo:CaseParticipant ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "reason_text" .
+bo:CaseParticipant.party a owl:ObjectProperty ;
+    rdfs:label "관여한 쪽"@ko ;
+    rdfs:comment "party_kind에 따라 사내 직무 또는 상대 종류 용어를 가리킨다"@ko ;
+    rdfs:domain bo:CaseParticipant ;
+    rdfs:range skos:Concept .
+bo:CaseTask a owl:Class ;
+    rdfs:label "사례 부서별 실적"@ko ;
+    rdfs:comment "부서별 계획 · 실제 일수 → 기본 기간의 사례 중간값"@ko ;
+    bo:table "case_task" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "과거 사례"@ko ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:CaseTask.case ; owl:someValuesFrom bo:PastCase ] .
+bo:CaseTask.task bo:column "case_task.task_id" ;
+    rdfs:domain bo:CaseTask ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "task_id" .
+bo:CaseTask.case bo:column "case_task.case_id" ;
+    rdfs:domain bo:CaseTask ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "과거 사례"@ko ;
+    rdfs:range bo:PastCase .
+bo:CaseTask.partyKind bo:column "case_task.party_kind" ;
+    rdfs:domain bo:CaseTask ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "party_kind" .
+bo:CaseTask.partyCode bo:column "case_task.party_code" ;
+    rdfs:domain bo:CaseTask ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "party_code" .
+bo:CaseTask.taskKind bo:column "case_task.task_kind" ;
+    rdfs:domain bo:CaseTask ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "task_kind" .
+bo:CaseTask.taskText bo:column "case_task.task_text" ;
+    rdfs:domain bo:CaseTask ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "task_text" .
+bo:CaseTask.plannedDays bo:column "case_task.planned_days" ;
+    rdfs:domain bo:CaseTask ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "planned_days" ;
+    rdfs:range xsd:decimal .
+bo:CaseTask.actualDays bo:column "case_task.actual_days" ;
+    rdfs:domain bo:CaseTask ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "actual_days" ;
+    rdfs:range xsd:decimal .
+bo:CaseTask.party a owl:ObjectProperty ;
+    rdfs:label "맡은 쪽"@ko ;
+    rdfs:comment "party_kind에 따라 사내 직무 또는 상대 종류 용어를 가리킨다"@ko ;
+    rdfs:domain bo:CaseTask ;
+    rdfs:range skos:Concept .
+bo:SystemEvent a owl:Class ;
+    rdfs:label "시스템 이벤트"@ko ;
+    bo:table "event" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "이벤트 · 동기화"@ko ;
+    rdfs:subClassOf bo:SourcedRecord .
+bo:SystemEvent.id bo:column "event.event_id" ;
+    rdfs:domain bo:SystemEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "event_id" .
+bo:SystemEvent.systemName bo:column "event.system_name" ;
+    rdfs:domain bo:SystemEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "system_name" .
+bo:SystemEvent.eventKind bo:column "event.event_kind" ;
+    rdfs:domain bo:SystemEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "event_kind" .
+bo:SystemEvent.targetTable bo:column "event.target_table" ;
+    rdfs:domain bo:SystemEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "target_table" .
+bo:SystemEvent.targetKey bo:column "event.target_key" ;
+    rdfs:domain bo:SystemEvent ;
+    rdfs:comment "대상 행의 기본키 값 (여러 열이면 JSON)"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "target_key" .
+bo:SystemEvent.targetColumn bo:column "event.target_column" ;
+    rdfs:domain bo:SystemEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "target_column" .
+bo:SystemEvent.oldValue bo:column "event.old_value" ;
+    rdfs:domain bo:SystemEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "old_value" .
+bo:SystemEvent.newValue bo:column "event.new_value" ;
+    rdfs:domain bo:SystemEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "new_value" .
+bo:SystemEvent.occurredAt bo:column "event.occurred_at" ;
+    rdfs:domain bo:SystemEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "occurred_at" .
+bo:SystemEvent.applyPolicy bo:column "event.apply_policy" ;
+    rdfs:domain bo:SystemEvent ;
+    rdfs:comment "code: event_apply"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "이벤트 반영 방식"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.event_apply .
+bo:SystemEvent.noteKo bo:column "event.note_ko" ;
+    rdfs:domain bo:SystemEvent ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "note_ko" .
+bo:SystemSync a owl:Class ;
+    rdfs:label "시스템 동기화"@ko ;
+    rdfs:comment "화면의 '마지막 확인 시각'"@ko ;
+    bo:table "system_sync" ;
+    bo:section "① 시스템 입력"@ko ;
+    bo:group "이벤트 · 동기화"@ko .
+bo:SystemSync.systemName bo:column "system_sync.system_name" ;
+    rdfs:domain bo:SystemSync ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "system_name" .
+bo:SystemSync.lastCheckedAt bo:column "system_sync.last_checked_at" ;
+    rdfs:domain bo:SystemSync ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "last_checked_at" .
+bo:SystemSync.lastChangedAt bo:column "system_sync.last_changed_at" ;
+    rdfs:domain bo:SystemSync ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "last_changed_at" .
+bo:CostRate a owl:Class ;
+    rdfs:label "단가"@ko ;
+    rdfs:comment "비용 항목 단가. 없으면 사례 중간값 → 가정"@ko ;
+    bo:table "cost_rate" ;
+    bo:section "② 기준 정보"@ko ;
+    bo:group "② 기준 정보"@ko ;
+    rdfs:subClassOf bo:SourcedRecord .
+bo:CostRate.costCode bo:column "cost_rate.cost_code" ;
+    rdfs:domain bo:CostRate ;
+    rdfs:comment "code: cost_item"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "비용 항목"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.cost_item .
+bo:CostRate.labelKo bo:column "cost_rate.label_ko" ;
+    rdfs:domain bo:CostRate ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "label_ko" .
+bo:CostRate.unit bo:column "cost_rate.unit" ;
+    rdfs:domain bo:CostRate ;
+    rdfs:comment "hour / ea / case / spot / crew_day / hull / ratio"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "unit" .
+bo:CostRate.unitCostKrw bo:column "cost_rate.unit_cost_krw" ;
+    rdfs:domain bo:CostRate ;
+    rdfs:comment "unit = ratio 이면 비율 (예: 0.3)"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "unit_cost_krw" ;
+    rdfs:range xsd:decimal .
+bo:CostRate.appliesTo bo:column "cost_rate.applies_to" ;
+    rdfs:domain bo:CostRate ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "applies_to" .
+bo:CostRate.note bo:column "cost_rate.note" ;
+    rdfs:domain bo:CostRate ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "note" .
+bo:WorkStandard a owl:Class ;
+    rdfs:label "표준 공수"@ko ;
+    rdfs:comment "표준 공수: 할 일의 작업 시간 = 수량 × hours_per_unit"@ko ;
+    bo:table "work_standard" ;
+    bo:section "② 기준 정보"@ko ;
+    bo:group "② 기준 정보"@ko ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:WorkStandard.resourceGroup ; owl:someValuesFrom bo:ResourceGroup ] .
+bo:WorkStandard.standard bo:column "work_standard.standard_id" ;
+    rdfs:domain bo:WorkStandard ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "standard_id" .
+bo:WorkStandard.partKind bo:column "work_standard.part_kind" ;
+    rdfs:domain bo:WorkStandard ;
+    rdfs:comment "code: part_kind"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부재 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.part_kind .
+bo:WorkStandard.workKind bo:column "work_standard.work_kind" ;
+    rdfs:domain bo:WorkStandard ;
+    rdfs:comment "code: work_kind"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "작업 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.work_kind .
+bo:WorkStandard.partState bo:column "work_standard.part_state" ;
+    rdfs:domain bo:WorkStandard ;
+    rdfs:comment "code: part_state, 또는 'any'"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부품 상태"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.part_state .
+bo:WorkStandard.hoursPerUnit bo:column "work_standard.hours_per_unit" ;
+    rdfs:domain bo:WorkStandard ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "hours_per_unit" ;
+    rdfs:range xsd:decimal .
+bo:WorkStandard.crewSize bo:column "work_standard.crew_size" ;
+    rdfs:domain bo:WorkStandard ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "crew_size" ;
+    rdfs:range xsd:integer .
+bo:WorkStandard.resourceGroup bo:column "work_standard.resource_group" ;
+    rdfs:domain bo:WorkStandard ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "작업장"@ko ;
+    rdfs:range bo:ResourceGroup .
+bo:WorkStandard.note bo:column "work_standard.note" ;
+    rdfs:domain bo:WorkStandard ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "note" .
+bo:DurationDefault a owl:Class ;
+    rdfs:label "기본 기간"@ko ;
+    rdfs:comment "부서별 기본 기간 (사례 중간값이 있으면 사례, 없으면 가정)"@ko ;
+    bo:table "duration_default" ;
+    bo:section "② 기준 정보"@ko ;
+    bo:group "② 기준 정보"@ko ;
+    rdfs:subClassOf bo:SourcedRecord .
+bo:DurationDefault.durationKey bo:column "duration_default.duration_key" ;
+    rdfs:domain bo:DurationDefault ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "duration_key" .
+bo:DurationDefault.labelKo bo:column "duration_default.label_ko" ;
+    rdfs:domain bo:DurationDefault ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "label_ko" .
+bo:DurationDefault.ownerKind bo:column "duration_default.owner_kind" ;
+    rdfs:domain bo:DurationDefault ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "owner_kind" .
+bo:DurationDefault.ownerCode bo:column "duration_default.owner_code" ;
+    rdfs:domain bo:DurationDefault ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "owner_code" .
+bo:DurationDefault.days bo:column "duration_default.days" ;
+    rdfs:domain bo:DurationDefault ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "days" ;
+    rdfs:range xsd:decimal .
+bo:DurationDefault.note bo:column "duration_default.note" ;
+    rdfs:domain bo:DurationDefault ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "note" .
+bo:DurationDefault.owner a owl:ObjectProperty ;
+    rdfs:label "맡는 쪽"@ko ;
+    rdfs:comment "owner_kind에 따라 사내 직무 또는 상대 종류 용어를 가리킨다"@ko ;
+    rdfs:domain bo:DurationDefault ;
+    rdfs:range skos:Concept .
+bo:TaskTemplate a owl:Class ;
+    rdfs:label "할 일 틀"@ko ;
+    rdfs:comment "할 일 틀 (규칙): 어떤 조건에서 누구에게 어떤 일이 생기나"@ko ;
+    bo:table "task_template" ;
+    bo:section "② 기준 정보"@ko ;
+    bo:group "② 기준 정보"@ko .
+bo:TaskTemplate.taskCode bo:column "task_template.task_code" ;
+    rdfs:domain bo:TaskTemplate ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "task_code" .
+bo:TaskTemplate.labelKo bo:column "task_template.label_ko" ;
+    rdfs:domain bo:TaskTemplate ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "label_ko" .
+bo:TaskTemplate.ownerRole bo:column "task_template.owner_role" ;
+    rdfs:domain bo:TaskTemplate ;
+    rdfs:comment "code: role (그 일을 맡는 사내 직무)"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "사내 직무"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.role .
+bo:TaskTemplate.counterpartKind bo:column "task_template.counterpart_kind" ;
+    rdfs:domain bo:TaskTemplate ;
+    rdfs:comment "code: counterparty_kind (같이 일하는 상대)"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "상대 종류"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.counterparty_kind .
+bo:TaskTemplate.whenCode bo:column "task_template.when_code" ;
+    rdfs:domain bo:TaskTemplate ;
+    rdfs:comment "code: when"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "할 일이 생기는 조건"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.when .
+bo:TaskTemplate.durationFrom bo:column "task_template.duration_from" ;
+    rdfs:domain bo:TaskTemplate ;
+    rdfs:comment "code: duration_from"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "기간 출처"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.duration_from .
+bo:TaskTemplate.durationKey bo:column "task_template.duration_key" ;
+    rdfs:domain bo:TaskTemplate ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "기본 기간"@ko ;
+    rdfs:range bo:DurationDefault .
+bo:TaskTemplate.predecessors bo:column "task_template.predecessors" ;
+    rdfs:domain bo:TaskTemplate ;
+    rdfs:comment "앞에 끝나야 하는 task_code (쉼표). 생기지 않은 일은 건너뛴다"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "predecessors" .
+bo:TaskTemplate.autoDoneBy bo:column "task_template.auto_done_by" ;
+    rdfs:domain bo:TaskTemplate ;
+    rdfs:comment "code: auto_done_by"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "자동 완료 근거"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.auto_done_by .
+bo:TaskTemplate.sortOrder bo:column "task_template.sort_order" ;
+    rdfs:domain bo:TaskTemplate ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "sort_order" ;
+    rdfs:range xsd:integer .
+bo:TaskTemplate.precededBy a owl:ObjectProperty ;
+    rdfs:label "앞선 할 일"@ko ;
+    rdfs:domain bo:TaskTemplate ;
+    rdfs:range bo:TaskTemplate .
+bo:PayerRule a owl:Class ;
+    rdfs:label "부담 주체 규칙"@ko ;
+    rdfs:comment "사유별 부담 주체 기본값. contract_change_term이 있으면 그게 먼저"@ko ;
+    bo:table "payer_rule" ;
+    bo:section "② 기준 정보"@ko ;
+    bo:group "② 기준 정보"@ko .
+bo:PayerRule.reason bo:column "payer_rule.reason" ;
+    rdfs:domain bo:PayerRule ;
+    rdfs:comment "code: reason"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "변경 사유"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.reason .
+bo:PayerRule.payer bo:column "payer_rule.payer" ;
+    rdfs:domain bo:PayerRule ;
+    rdfs:comment "code: payer"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부담 주체"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.payer .
+bo:PayerRule.note bo:column "payer_rule.note" ;
+    rdfs:domain bo:PayerRule ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "note" .
+bo:ContractChangeTerm a owl:Class ;
+    rdfs:label "계약 변경 조건"@ko ;
+    bo:table "contract_change_term" ;
+    bo:section "② 기준 정보"@ko ;
+    bo:group "② 기준 정보"@ko ;
+    rdfs:subClassOf bo:SourcedRecord ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ContractChangeTerm.series ; owl:someValuesFrom bo:Series ] .
+bo:ContractChangeTerm.term bo:column "contract_change_term.term_id" ;
+    rdfs:domain bo:ContractChangeTerm ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "term_id" .
+bo:ContractChangeTerm.series bo:column "contract_change_term.series_id" ;
+    rdfs:domain bo:ContractChangeTerm ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "시리즈"@ko ;
+    rdfs:range bo:Series .
+bo:ContractChangeTerm.hull bo:column "contract_change_term.hull_id" ;
+    rdfs:domain bo:ContractChangeTerm ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:ContractChangeTerm.reason bo:column "contract_change_term.reason" ;
+    rdfs:domain bo:ContractChangeTerm ;
+    rdfs:comment "code: reason"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "변경 사유"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.reason .
+bo:ContractChangeTerm.payer bo:column "contract_change_term.payer" ;
+    rdfs:domain bo:ContractChangeTerm ;
+    rdfs:comment "code: payer (owner / yard)"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "부담 주체"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.payer .
+bo:ContractChangeTerm.ownerSharePct bo:column "contract_change_term.owner_share_pct" ;
+    rdfs:domain bo:ContractChangeTerm ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "owner_share_pct" ;
+    rdfs:range xsd:decimal .
+bo:ContractChangeTerm.note bo:column "contract_change_term.note" ;
+    rdfs:domain bo:ContractChangeTerm ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "note" .
+bo:Setting a owl:Class ;
+    rdfs:label "설정값"@ko ;
+    bo:table "setting" ;
+    bo:section "② 기준 정보"@ko ;
+    bo:group "② 기준 정보"@ko .
+bo:Setting.key bo:column "setting.key" ;
+    rdfs:domain bo:Setting ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "key" .
+bo:Setting.value bo:column "setting.value" ;
+    rdfs:domain bo:Setting ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "value" .
+bo:Setting.note bo:column "setting.note" ;
+    rdfs:domain bo:Setting ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "note" .
+bo:ExpectedResult a owl:Class ;
+    rdfs:label "기대 결과"@ko ;
+    rdfs:comment "새 엔진이 맞춰 봐야 하는 기대값 (예: 팀원이 계산한 A/B/C 비용)"@ko ;
+    bo:table "expected_result" ;
+    bo:section "② 기준 정보"@ko ;
+    bo:group "② 기준 정보"@ko .
+bo:ExpectedResult.checkCode bo:column "expected_result.check_code" ;
+    rdfs:domain bo:ExpectedResult ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "check_code" .
+bo:ExpectedResult.subject bo:column "expected_result.subject" ;
+    rdfs:domain bo:ExpectedResult ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "subject" .
+bo:ExpectedResult.valueNum bo:column "expected_result.value_num" ;
+    rdfs:domain bo:ExpectedResult ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "value_num" ;
+    rdfs:range xsd:decimal .
+bo:ExpectedResult.valueText bo:column "expected_result.value_text" ;
+    rdfs:domain bo:ExpectedResult ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "value_text" .
+bo:ExpectedResult.note bo:column "expected_result.note" ;
+    rdfs:domain bo:ExpectedResult ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "note" .
+bo:AssessmentRun a owl:Class ;
+    rdfs:label "계산 기록"@ko ;
+    bo:table "assessment_run" ;
+    bo:section "③ 서비스 기록"@ko ;
+    bo:group "③ 서비스 기록"@ko ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:AssessmentRun.change ; owl:someValuesFrom bo:DesignChange ] .
+bo:AssessmentRun.run bo:column "assessment_run.run_id" ;
+    rdfs:domain bo:AssessmentRun ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "run_id" .
+bo:AssessmentRun.change bo:column "assessment_run.change_id" ;
+    rdfs:domain bo:AssessmentRun ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:AssessmentRun.asOf bo:column "assessment_run.as_of" ;
+    rdfs:domain bo:AssessmentRun ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "as_of" .
+bo:AssessmentRun.createdAt bo:column "assessment_run.created_at" ;
+    rdfs:domain bo:AssessmentRun ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "created_at" .
+bo:AssessmentRun.engineVersion bo:column "assessment_run.engine_version" ;
+    rdfs:domain bo:AssessmentRun ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "engine_version" .
+bo:AssessmentRun.inputFingerprint bo:column "assessment_run.input_fingerprint" ;
+    rdfs:domain bo:AssessmentRun ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "input_fingerprint" .
+bo:AssessmentRun.note bo:column "assessment_run.note" ;
+    rdfs:domain bo:AssessmentRun ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "note" .
+bo:AssessmentMetric a owl:Class ;
+    rdfs:label "계산 값"@ko ;
+    bo:table "assessment_metric" ;
+    bo:section "③ 서비스 기록"@ko ;
+    bo:group "③ 서비스 기록"@ko ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:AssessmentMetric.run ; owl:someValuesFrom bo:AssessmentRun ] .
+bo:AssessmentMetric.metric bo:column "assessment_metric.metric_id" ;
+    rdfs:domain bo:AssessmentMetric ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "metric_id" .
+bo:AssessmentMetric.run bo:column "assessment_metric.run_id" ;
+    rdfs:domain bo:AssessmentMetric ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "계산 기록"@ko ;
+    rdfs:range bo:AssessmentRun .
+bo:AssessmentMetric.optionKey bo:column "assessment_metric.option_key" ;
+    rdfs:domain bo:AssessmentMetric ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "option_key" .
+bo:AssessmentMetric.hull bo:column "assessment_metric.hull_id" ;
+    rdfs:domain bo:AssessmentMetric ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:AssessmentMetric.metricCode bo:column "assessment_metric.metric_code" ;
+    rdfs:domain bo:AssessmentMetric ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "metric_code" .
+bo:AssessmentMetric.valueNum bo:column "assessment_metric.value_num" ;
+    rdfs:domain bo:AssessmentMetric ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "value_num" ;
+    rdfs:range xsd:decimal .
+bo:AssessmentMetric.valueText bo:column "assessment_metric.value_text" ;
+    rdfs:domain bo:AssessmentMetric ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "value_text" .
+bo:AssessmentMetric.unit bo:column "assessment_metric.unit" ;
+    rdfs:domain bo:AssessmentMetric ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "unit" .
+bo:AssessmentMetric.explanation bo:column "assessment_metric.explanation" ;
+    rdfs:domain bo:AssessmentMetric ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "explanation" .
+bo:TaskConfirmation a owl:Class ;
+    rdfs:label "팀 확인"@ko ;
+    rdfs:comment "팀 확인: 가능 / 안 돼요 (+ 고친 기간 · 이유). 이게 곧 의견 남기기"@ko ;
+    bo:table "task_confirmation" ;
+    bo:section "③ 서비스 기록"@ko ;
+    bo:group "③ 서비스 기록"@ko ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:TaskConfirmation.change ; owl:someValuesFrom bo:DesignChange ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:TaskConfirmation.taskCode ; owl:someValuesFrom bo:TaskTemplate ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:TaskConfirmation.employee ; owl:someValuesFrom bo:Employee ] .
+bo:TaskConfirmation.confirmation bo:column "task_confirmation.confirmation_id" ;
+    rdfs:domain bo:TaskConfirmation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "confirmation_id" .
+bo:TaskConfirmation.change bo:column "task_confirmation.change_id" ;
+    rdfs:domain bo:TaskConfirmation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:TaskConfirmation.taskCode bo:column "task_confirmation.task_code" ;
+    rdfs:domain bo:TaskConfirmation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "할 일 틀"@ko ;
+    rdfs:range bo:TaskTemplate .
+bo:TaskConfirmation.hull bo:column "task_confirmation.hull_id" ;
+    rdfs:domain bo:TaskConfirmation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:TaskConfirmation.employee bo:column "task_confirmation.employee_id" ;
+    rdfs:domain bo:TaskConfirmation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원"@ko ;
+    rdfs:range bo:Employee .
+bo:TaskConfirmation.answer bo:column "task_confirmation.answer" ;
+    rdfs:domain bo:TaskConfirmation ;
+    rdfs:comment "code: task_answer"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "팀 답변"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.task_answer .
+bo:TaskConfirmation.editedDays bo:column "task_confirmation.edited_days" ;
+    rdfs:domain bo:TaskConfirmation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "edited_days" ;
+    rdfs:range xsd:decimal .
+bo:TaskConfirmation.reason bo:column "task_confirmation.reason" ;
+    rdfs:domain bo:TaskConfirmation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "reason" .
+bo:TaskConfirmation.memo bo:column "task_confirmation.memo" ;
+    rdfs:domain bo:TaskConfirmation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "memo" .
+bo:TaskConfirmation.enteredBy bo:column "task_confirmation.entered_by" ;
+    rdfs:domain bo:TaskConfirmation ;
+    rdfs:comment "code: entered_by"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "입력한 쪽"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.entered_by .
+bo:TaskConfirmation.spokenBy bo:column "task_confirmation.spoken_by" ;
+    rdfs:domain bo:TaskConfirmation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원 (spoken_by)"@ko ;
+    rdfs:range bo:Employee .
+bo:TaskConfirmation.at bo:column "task_confirmation.at" ;
+    rdfs:domain bo:TaskConfirmation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "at" .
+bo:DecisionRecord a owl:Class ;
+    rdfs:label "결정"@ko ;
+    bo:table "decision_record" ;
+    bo:section "③ 서비스 기록"@ko ;
+    bo:group "③ 서비스 기록"@ko ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:DecisionRecord.change ; owl:someValuesFrom bo:DesignChange ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:DecisionRecord.decidedBy ; owl:someValuesFrom bo:Employee ] .
+bo:DecisionRecord.decision bo:column "decision_record.decision_id" ;
+    rdfs:domain bo:DecisionRecord ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "decision_id" .
+bo:DecisionRecord.change bo:column "decision_record.change_id" ;
+    rdfs:domain bo:DecisionRecord ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:DecisionRecord.run bo:column "decision_record.run_id" ;
+    rdfs:domain bo:DecisionRecord ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "계산 기록"@ko ;
+    rdfs:range bo:AssessmentRun .
+bo:DecisionRecord.method bo:column "decision_record.method" ;
+    rdfs:domain bo:DecisionRecord ;
+    rdfs:comment "code: method"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "대응 방식"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.method .
+bo:DecisionRecord.startHull bo:column "decision_record.start_hull_id" ;
+    rdfs:domain bo:DecisionRecord ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선 (start_hull_id)"@ko ;
+    rdfs:range bo:Hull .
+bo:DecisionRecord.prioritySnapshot bo:column "decision_record.priority_snapshot" ;
+    rdfs:domain bo:DecisionRecord ;
+    rdfs:comment "JSON"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "priority_snapshot" .
+bo:DecisionRecord.confirmationSnapshot bo:column "decision_record.confirmation_snapshot" ;
+    rdfs:domain bo:DecisionRecord ;
+    rdfs:comment "JSON"@ko ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "confirmation_snapshot" .
+bo:DecisionRecord.rationale bo:column "decision_record.rationale" ;
+    rdfs:domain bo:DecisionRecord ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "rationale" .
+bo:DecisionRecord.decidedBy bo:column "decision_record.decided_by" ;
+    rdfs:domain bo:DecisionRecord ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원 (decided_by)"@ko ;
+    rdfs:range bo:Employee .
+bo:DecisionRecord.delegatedFrom bo:column "decision_record.delegated_from" ;
+    rdfs:domain bo:DecisionRecord ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원 (delegated_from)"@ko ;
+    rdfs:range bo:Employee .
+bo:DecisionRecord.decidedAt bo:column "decision_record.decided_at" ;
+    rdfs:domain bo:DecisionRecord ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "decided_at" .
+bo:DecisionRecord.state bo:column "decision_record.state" ;
+    rdfs:domain bo:DecisionRecord ;
+    rdfs:comment "code: decision_state"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "결정 상태"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.decision_state .
+bo:DecisionApproval a owl:Class ;
+    rdfs:label "PM 결재"@ko ;
+    rdfs:comment "PM 결재 (계약 납기 초과 · 실부담 기준 초과 · 선주 동의 필요)"@ko ;
+    bo:table "decision_approval" ;
+    bo:section "③ 서비스 기록"@ko ;
+    bo:group "③ 서비스 기록"@ko ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:DecisionApproval.decision ; owl:someValuesFrom bo:DecisionRecord ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:DecisionApproval.approver ; owl:someValuesFrom bo:Employee ] .
+bo:DecisionApproval.approval bo:column "decision_approval.approval_id" ;
+    rdfs:domain bo:DecisionApproval ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "approval_id" .
+bo:DecisionApproval.decision bo:column "decision_approval.decision_id" ;
+    rdfs:domain bo:DecisionApproval ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "결정"@ko ;
+    rdfs:range bo:DecisionRecord .
+bo:DecisionApproval.approver bo:column "decision_approval.approver_id" ;
+    rdfs:domain bo:DecisionApproval ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원 (approver_id)"@ko ;
+    rdfs:range bo:Employee .
+bo:DecisionApproval.triggerCode bo:column "decision_approval.trigger_code" ;
+    rdfs:domain bo:DecisionApproval ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "trigger_code" .
+bo:DecisionApproval.state bo:column "decision_approval.state" ;
+    rdfs:domain bo:DecisionApproval ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "state" .
+bo:DecisionApproval.at bo:column "decision_approval.at" ;
+    rdfs:domain bo:DecisionApproval ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "at" .
+bo:DecisionApproval.comment bo:column "decision_approval.comment" ;
+    rdfs:domain bo:DecisionApproval ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "comment" .
+bo:ChairDelegation a owl:Class ;
+    rdfs:label "주관자 위임"@ko ;
+    rdfs:comment "이번 회의만 주관자 위임"@ko ;
+    bo:table "chair_delegation" ;
+    bo:section "③ 서비스 기록"@ko ;
+    bo:group "③ 서비스 기록"@ko ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ChairDelegation.change ; owl:someValuesFrom bo:DesignChange ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ChairDelegation.fromEmployee ; owl:someValuesFrom bo:Employee ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:ChairDelegation.toEmployee ; owl:someValuesFrom bo:Employee ] .
+bo:ChairDelegation.delegation bo:column "chair_delegation.delegation_id" ;
+    rdfs:domain bo:ChairDelegation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "delegation_id" .
+bo:ChairDelegation.change bo:column "chair_delegation.change_id" ;
+    rdfs:domain bo:ChairDelegation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:ChairDelegation.fromEmployee bo:column "chair_delegation.from_employee_id" ;
+    rdfs:domain bo:ChairDelegation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원 (from_employee_id)"@ko ;
+    rdfs:range bo:Employee .
+bo:ChairDelegation.toEmployee bo:column "chair_delegation.to_employee_id" ;
+    rdfs:domain bo:ChairDelegation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원 (to_employee_id)"@ko ;
+    rdfs:range bo:Employee .
+bo:ChairDelegation.meetingDate bo:column "chair_delegation.meeting_date" ;
+    rdfs:domain bo:ChairDelegation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "meeting_date" .
+bo:ChairDelegation.reason bo:column "chair_delegation.reason" ;
+    rdfs:domain bo:ChairDelegation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "reason" .
+bo:ChairDelegation.at bo:column "chair_delegation.at" ;
+    rdfs:domain bo:ChairDelegation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "at" .
+bo:OwnerProposal a owl:Class ;
+    rdfs:label "선주 제안"@ko ;
+    bo:table "owner_proposal" ;
+    bo:section "③ 서비스 기록"@ko ;
+    bo:group "③ 서비스 기록"@ko ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:OwnerProposal.change ; owl:someValuesFrom bo:DesignChange ] .
+bo:OwnerProposal.id bo:column "owner_proposal.owner_proposal_id" ;
+    rdfs:domain bo:OwnerProposal ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "owner_proposal_id" .
+bo:OwnerProposal.change bo:column "owner_proposal.change_id" ;
+    rdfs:domain bo:OwnerProposal ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:OwnerProposal.decision bo:column "owner_proposal.decision_id" ;
+    rdfs:domain bo:OwnerProposal ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "결정"@ko ;
+    rdfs:range bo:DecisionRecord .
+bo:OwnerProposal.expectedInternalCostKrw bo:column "owner_proposal.expected_internal_cost_krw" ;
+    rdfs:domain bo:OwnerProposal ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "expected_internal_cost_krw" ;
+    rdfs:range xsd:integer .
+bo:OwnerProposal.offeredPriceKrw bo:column "owner_proposal.offered_price_krw" ;
+    rdfs:domain bo:OwnerProposal ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "offered_price_krw" ;
+    rdfs:range xsd:integer .
+bo:OwnerProposal.proposedDate bo:column "owner_proposal.proposed_date" ;
+    rdfs:domain bo:OwnerProposal ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "proposed_date" .
+bo:OwnerProposal.state bo:column "owner_proposal.state" ;
+    rdfs:domain bo:OwnerProposal ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "state" .
+bo:OwnerProposal.conditions bo:column "owner_proposal.conditions" ;
+    rdfs:domain bo:OwnerProposal ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "conditions" .
+bo:TaskProgress a owl:Class ;
+    rdfs:label "진행 상태"@ko ;
+    rdfs:comment "진행 보드: 시스템 기록이 생기면 자동 완료"@ko ;
+    bo:table "task_progress" ;
+    bo:section "③ 서비스 기록"@ko ;
+    bo:group "③ 서비스 기록"@ko ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:TaskProgress.change ; owl:someValuesFrom bo:DesignChange ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:TaskProgress.taskCode ; owl:someValuesFrom bo:TaskTemplate ] .
+bo:TaskProgress.progress bo:column "task_progress.progress_id" ;
+    rdfs:domain bo:TaskProgress ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "progress_id" .
+bo:TaskProgress.change bo:column "task_progress.change_id" ;
+    rdfs:domain bo:TaskProgress ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:TaskProgress.taskCode bo:column "task_progress.task_code" ;
+    rdfs:domain bo:TaskProgress ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "할 일 틀"@ko ;
+    rdfs:range bo:TaskTemplate .
+bo:TaskProgress.hull bo:column "task_progress.hull_id" ;
+    rdfs:domain bo:TaskProgress ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "호선"@ko ;
+    rdfs:range bo:Hull .
+bo:TaskProgress.employee bo:column "task_progress.employee_id" ;
+    rdfs:domain bo:TaskProgress ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원"@ko ;
+    rdfs:range bo:Employee .
+bo:TaskProgress.plannedStart bo:column "task_progress.planned_start" ;
+    rdfs:domain bo:TaskProgress ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "planned_start" .
+bo:TaskProgress.plannedFinish bo:column "task_progress.planned_finish" ;
+    rdfs:domain bo:TaskProgress ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "planned_finish" .
+bo:TaskProgress.actualFinish bo:column "task_progress.actual_finish" ;
+    rdfs:domain bo:TaskProgress ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "actual_finish" .
+bo:TaskProgress.status bo:column "task_progress.status" ;
+    rdfs:domain bo:TaskProgress ;
+    rdfs:comment "code: progress_status"@ko ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "진행 상태"@ko ;
+    rdfs:range skos:Concept ;
+    bo:codeScheme bc:scheme.progress_status .
+bo:TaskProgress.autoDoneRef bo:column "task_progress.auto_done_ref" ;
+    rdfs:domain bo:TaskProgress ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "auto_done_ref" .
+bo:TaskProgress.evidenceNote bo:column "task_progress.evidence_note" ;
+    rdfs:domain bo:TaskProgress ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "evidence_note" .
+bo:AiExplanation a owl:Class ;
+    rdfs:label "AI 설명"@ko ;
+    rdfs:comment "AI는 고르지 않고 설명만"@ko ;
+    bo:table "ai_explanation" ;
+    bo:section "③ 서비스 기록"@ko ;
+    bo:group "③ 서비스 기록"@ko ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty bo:AiExplanation.change ; owl:someValuesFrom bo:DesignChange ] .
+bo:AiExplanation.explanation bo:column "ai_explanation.explanation_id" ;
+    rdfs:domain bo:AiExplanation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "explanation_id" .
+bo:AiExplanation.change bo:column "ai_explanation.change_id" ;
+    rdfs:domain bo:AiExplanation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "설계변경"@ko ;
+    rdfs:range bo:DesignChange .
+bo:AiExplanation.run bo:column "ai_explanation.run_id" ;
+    rdfs:domain bo:AiExplanation ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "계산 기록"@ko ;
+    rdfs:range bo:AssessmentRun .
+bo:AiExplanation.contentJson bo:column "ai_explanation.content_json" ;
+    rdfs:domain bo:AiExplanation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "content_json" .
+bo:AiExplanation.provider bo:column "ai_explanation.provider" ;
+    rdfs:domain bo:AiExplanation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "provider" .
+bo:AiExplanation.createdAt bo:column "ai_explanation.created_at" ;
+    rdfs:domain bo:AiExplanation ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "created_at" .
+bo:AuditLog a owl:Class ;
+    rdfs:label "변경 기록"@ko ;
+    bo:table "audit_log" ;
+    bo:section "③ 서비스 기록"@ko ;
+    bo:group "③ 서비스 기록"@ko .
+bo:AuditLog.log bo:column "audit_log.log_id" ;
+    rdfs:domain bo:AuditLog ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "log_id" .
+bo:AuditLog.at bo:column "audit_log.at" ;
+    rdfs:domain bo:AuditLog ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "at" .
+bo:AuditLog.employee bo:column "audit_log.employee_id" ;
+    rdfs:domain bo:AuditLog ;
+    a owl:ObjectProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "직원"@ko ;
+    rdfs:range bo:Employee .
+bo:AuditLog.action bo:column "audit_log.action" ;
+    rdfs:domain bo:AuditLog ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "action" .
+bo:AuditLog.targetTable bo:column "audit_log.target_table" ;
+    rdfs:domain bo:AuditLog ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "target_table" .
+bo:AuditLog.targetKey bo:column "audit_log.target_key" ;
+    rdfs:domain bo:AuditLog ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "target_key" .
+bo:AuditLog.detailJson bo:column "audit_log.detail_json" ;
+    rdfs:domain bo:AuditLog ;
+    a owl:DatatypeProperty ;
+    a owl:FunctionalProperty ;
+    rdfs:label "detail_json" .
+bo:affectsPart a owl:ObjectProperty ;
+    rdfs:label "건드리는 부품"@ko ;
+    rdfs:domain bo:DesignChange ;
+    rdfs:range bo:Part ;
+    owl:propertyChainAxiom ( [ owl:inverseOf bo:ChangeAffectedPart.change ] bo:ChangeAffectedPart.part ) ;
+    bo:derivedFrom bo:ChangeAffectedPart .
+bo:scopeHull a owl:ObjectProperty ;
+    rdfs:label "검토 대상 호선"@ko ;
+    rdfs:domain bo:DesignChange ;
+    rdfs:range bo:Hull ;
+    owl:propertyChainAxiom ( [ owl:inverseOf bo:ChangeHullScope.change ] bo:ChangeHullScope.hull ) ;
+    bo:derivedFrom bo:ChangeHullScope .
+bo:changesMaterial a owl:ObjectProperty ;
+    rdfs:label "바뀌는 자재"@ko ;
+    rdfs:domain bo:DesignChange ;
+    rdfs:range bo:Material ;
+    owl:propertyChainAxiom ( [ owl:inverseOf bo:ChangeMaterial.change ] bo:ChangeMaterial.material ) ;
+    bo:derivedFrom bo:ChangeMaterial .
+bo:targetsOccurrence a owl:ObjectProperty ;
+    rdfs:label "적용 위치"@ko ;
+    rdfs:domain bo:EngineeringSolution ;
+    rdfs:range bo:PartOccurrence ;
+    owl:propertyChainAxiom ( [ owl:inverseOf bo:SolutionTarget.solution ] bo:SolutionTarget.occurrence ) ;
+    bo:derivedFrom bo:SolutionTarget .
+bo:dependsOn a owl:ObjectProperty ;
+    rdfs:label "선행 작업"@ko ;
+    rdfs:domain bo:Operation ;
+    rdfs:range bo:Operation ;
+    owl:propertyChainAxiom ( [ owl:inverseOf bo:OperationDependency.successor ] bo:OperationDependency.predecessor ) ;
+    bo:derivedFrom bo:OperationDependency .
+bo:responsibilityObject a owl:ObjectProperty ;
+    rdfs:label "담당 대상"@ko ;
+    rdfs:comment "responsibility.object_type 값에 따라 responsibility.object_id이 가리키는 행"@ko ;
+    rdfs:domain bo:Responsibility ;
+    rdfs:range [ a owl:Class ; owl:unionOf ( bo:Material bo:Block bo:Part bo:Zone ) ] .
+bo:responsibleFor a owl:ObjectProperty ;
+    rdfs:label "담당"@ko ;
+    rdfs:domain bo:Employee ;
+    rdfs:range [ a owl:Class ; owl:unionOf ( bo:Material bo:Block bo:Part bo:Zone ) ] ;
+    owl:propertyChainAxiom ( [ owl:inverseOf bo:Responsibility.employee ] bo:responsibilityObject ) ;
+    bo:derivedFrom bo:Responsibility .
+bo:requestedBy a owl:ObjectProperty ;
+    rdfs:label "요청자"@ko ;
+    rdfs:comment "change.requested_by_kind 값에 따라 change.requested_by_id이 가리키는 행"@ko ;
+    rdfs:domain bo:DesignChange ;
+    rdfs:range [ a owl:Class ; owl:unionOf ( bo:Employee bo:Counterparty ) ] .
+bo:eventTarget a owl:ObjectProperty ;
+    rdfs:label "바뀌는 대상"@ko ;
+    rdfs:comment "event.target_table 값에 따라 event.target_key이 가리키는 행"@ko ;
+    rdfs:domain bo:SystemEvent ;
+    rdfs:range owl:Thing .
+bc:scheme.approval_state a skos:ConceptScheme ;
+    rdfs:label "승인 상태"@ko ;
+    skos:notation "approval_state" .
+bc:scheme.assignment_role a skos:ConceptScheme ;
+    rdfs:label "조직표 역할"@ko ;
+    skos:notation "assignment_role" .
+bc:scheme.auto_done_by a skos:ConceptScheme ;
+    rdfs:label "자동 완료 근거"@ko ;
+    skos:notation "auto_done_by" .
+bc:scheme.certainty a skos:ConceptScheme ;
+    rdfs:label "확실성"@ko ;
+    skos:notation "certainty" .
+bc:scheme.change_source a skos:ConceptScheme ;
+    rdfs:label "변경 출처"@ko ;
+    skos:notation "change_source" .
+bc:scheme.change_status a skos:ConceptScheme ;
+    rdfs:label "변경 상태"@ko ;
+    skos:notation "change_status" .
+bc:scheme.change_type a skos:ConceptScheme ;
+    rdfs:label "변경 유형"@ko ;
+    skos:notation "change_type" .
+bc:scheme.commitment_state a skos:ConceptScheme ;
+    rdfs:label "확약 상태"@ko ;
+    skos:notation "commitment_state" .
+bc:scheme.cost_item a skos:ConceptScheme ;
+    rdfs:label "비용 항목"@ko ;
+    skos:notation "cost_item" .
+bc:scheme.counterparty_kind a skos:ConceptScheme ;
+    rdfs:label "상대 종류"@ko ;
+    skos:notation "counterparty_kind" .
+bc:scheme.decision_state a skos:ConceptScheme ;
+    rdfs:label "결정 상태"@ko ;
+    skos:notation "decision_state" .
+bc:scheme.duration_from a skos:ConceptScheme ;
+    rdfs:label "기간 출처"@ko ;
+    skos:notation "duration_from" .
+bc:scheme.entered_by a skos:ConceptScheme ;
+    rdfs:label "입력한 쪽"@ko ;
+    skos:notation "entered_by" .
+bc:scheme.event_apply a skos:ConceptScheme ;
+    rdfs:label "이벤트 반영 방식"@ko ;
+    skos:notation "event_apply" .
+bc:scheme.handling a skos:ConceptScheme ;
+    rdfs:label "처리 방법"@ko ;
+    skos:notation "handling" .
+bc:scheme.lifecycle_status a skos:ConceptScheme ;
+    rdfs:label "호선 단계"@ko ;
+    skos:notation "lifecycle_status" .
+bc:scheme.material_action a skos:ConceptScheme ;
+    rdfs:label "자재 동작"@ko ;
+    skos:notation "material_action" .
+bc:scheme.method a skos:ConceptScheme ;
+    rdfs:label "대응 방식"@ko ;
+    skos:notation "method" .
+bc:scheme.milestone a skos:ConceptScheme ;
+    rdfs:label "마일스톤"@ko ;
+    skos:notation "milestone" .
+bc:scheme.operation_type a skos:ConceptScheme ;
+    rdfs:label "작업 종류"@ko ;
+    skos:notation "operation_type" .
+bc:scheme.owner_criterion a skos:ConceptScheme ;
+    rdfs:label "선주 우선순위 기준"@ko ;
+    skos:notation "owner_criterion" .
+bc:scheme.part_kind a skos:ConceptScheme ;
+    rdfs:label "부재 종류"@ko ;
+    skos:notation "part_kind" .
+bc:scheme.part_state a skos:ConceptScheme ;
+    rdfs:label "부품 상태"@ko ;
+    skos:notation "part_state" .
+bc:scheme.payer a skos:ConceptScheme ;
+    rdfs:label "부담 주체"@ko ;
+    skos:notation "payer" .
+bc:scheme.process a skos:ConceptScheme ;
+    rdfs:label "공정"@ko ;
+    skos:notation "process" .
+bc:scheme.production_event_kind a skos:ConceptScheme ;
+    rdfs:label "생산 실적 종류"@ko ;
+    skos:notation "production_event_kind" .
+bc:scheme.progress_status a skos:ConceptScheme ;
+    rdfs:label "진행 상태"@ko ;
+    skos:notation "progress_status" .
+bc:scheme.quote_channel a skos:ConceptScheme ;
+    rdfs:label "조달 경로"@ko ;
+    skos:notation "quote_channel" .
+bc:scheme.quote_state a skos:ConceptScheme ;
+    rdfs:label "견적 상태"@ko ;
+    skos:notation "quote_state" .
+bc:scheme.reason a skos:ConceptScheme ;
+    rdfs:label "변경 사유"@ko ;
+    skos:notation "reason" .
+bc:scheme.release_state a skos:ConceptScheme ;
+    rdfs:label "배포 상태"@ko ;
+    skos:notation "release_state" .
+bc:scheme.responsibility_object a skos:ConceptScheme ;
+    rdfs:label "담당 대상 종류"@ko ;
+    skos:notation "responsibility_object" .
+bc:scheme.role a skos:ConceptScheme ;
+    rdfs:label "사내 직무"@ko ;
+    skos:notation "role" .
+bc:scheme.scope_state a skos:ConceptScheme ;
+    rdfs:label "적용 범위"@ko ;
+    skos:notation "scope_state" .
+bc:scheme.ship_type a skos:ConceptScheme ;
+    rdfs:label "선종"@ko ;
+    skos:notation "ship_type" .
+bc:scheme.solution_kind a skos:ConceptScheme ;
+    rdfs:label "설계안 종류"@ko ;
+    skos:notation "solution_kind" .
+bc:scheme.source_system a skos:ConceptScheme ;
+    rdfs:label "출처 시스템"@ko ;
+    skos:notation "source_system" .
+bc:scheme.task_answer a skos:ConceptScheme ;
+    rdfs:label "팀 답변"@ko ;
+    skos:notation "task_answer" .
+bc:scheme.timing a skos:ConceptScheme ;
+    rdfs:label "반영 시점"@ko ;
+    skos:notation "timing" .
+bc:scheme.when a skos:ConceptScheme ;
+    rdfs:label "할 일이 생기는 조건"@ko ;
+    skos:notation "when" .
+bc:scheme.work_kind a skos:ConceptScheme ;
+    rdfs:label "작업 종류"@ko ;
+    skos:notation "work_kind" .
+bc:scheme.work_order_status a skos:ConceptScheme ;
+    rdfs:label "작업지시 상태"@ko ;
+    skos:notation "work_order_status" .
+bc:scheme.work_type a skos:ConceptScheme ;
+    rdfs:label "공종"@ko ;
+    skos:notation "work_type" .
+bc:scheme.zone_kind a skos:ConceptScheme ;
+    rdfs:label "구역 종류"@ko ;
+    skos:notation "zone_kind" .
+bc:part_kind.group.outfitting_support a skos:Concept ;
+    skos:prefLabel "의장 지지물"@ko ;
+    skos:inScheme bc:scheme.part_kind ;
+    skos:topConceptOf bc:scheme.part_kind ;
+    bo:draft true ;
+    skos:narrower bc:part_kind.pipe_support ;
+    skos:narrower bc:part_kind.duct_support ;
+    skos:narrower bc:part_kind.equipment_mount .
+bc:part_kind.pipe_support skos:broader bc:part_kind.group.outfitting_support ;
+    skos:altLabel "서포트"@ko ;
+    skos:altLabel "파이프 서포트"@ko ;
+    skos:altLabel "배관 지지대"@ko ;
+    skos:altLabel "행거"@ko .
+bc:part_kind.duct_support skos:broader bc:part_kind.group.outfitting_support ;
+    skos:altLabel "덕트 서포트"@ko ;
+    skos:altLabel "덕트 행거"@ko ;
+    skos:altLabel "통풍 덕트 지지대"@ko .
+bc:part_kind.equipment_mount skos:broader bc:part_kind.group.outfitting_support ;
+    skos:altLabel "장비 시트"@ko ;
+    skos:altLabel "기기 받침"@ko ;
+    skos:altLabel "파운데이션"@ko .
+bc:part_kind.group.hull_structure a skos:Concept ;
+    skos:prefLabel "선체 구조재"@ko ;
+    skos:inScheme bc:scheme.part_kind ;
+    skos:topConceptOf bc:scheme.part_kind ;
+    bo:draft true ;
+    skos:narrower bc:part_kind.stiffener ;
+    skos:narrower bc:part_kind.hull_bracket .
+bc:part_kind.stiffener skos:broader bc:part_kind.group.hull_structure ;
+    skos:altLabel "스티프너"@ko ;
+    skos:altLabel "론지"@ko ;
+    skos:altLabel "보강 부재"@ko ;
+    skos:altLabel "평강"@ko ;
+    skos:altLabel "FB"@ko .
+bc:part_kind.hull_bracket skos:broader bc:part_kind.group.hull_structure ;
+    skos:altLabel "선체 브라켓"@ko ;
+    skos:altLabel "트리핑 브래킷"@ko .
+bc:part_kind.group.opening a skos:Concept ;
+    skos:prefLabel "개구 · 관통부"@ko ;
+    skos:inScheme bc:scheme.part_kind ;
+    skos:topConceptOf bc:scheme.part_kind ;
+    bo:draft true ;
+    skos:narrower bc:part_kind.manhole ;
+    skos:narrower bc:part_kind.pipe_penetration .
+bc:part_kind.manhole skos:broader bc:part_kind.group.opening ;
+    skos:altLabel "맨홀 커버"@ko ;
+    skos:altLabel "점검구"@ko .
+bc:part_kind.pipe_penetration skos:broader bc:part_kind.group.opening ;
+    skos:altLabel "관통 슬리브"@ko ;
+    skos:altLabel "슬리브"@ko ;
+    skos:altLabel "관통 피스"@ko ;
+    skos:altLabel "페네트레이션"@ko .
+bc:part_kind.group.piping a skos:Concept ;
+    skos:prefLabel "배관재"@ko ;
+    skos:inScheme bc:scheme.part_kind ;
+    skos:topConceptOf bc:scheme.part_kind ;
+    bo:draft true ;
+    skos:narrower bc:part_kind.pipe_spool .
+bc:part_kind.pipe_spool skos:broader bc:part_kind.group.piping ;
+    skos:altLabel "스풀"@ko ;
+    skos:altLabel "배관 스풀"@ko ;
+    skos:altLabel "파이프 피스"@ko .
+bc:part_kind.group.electrical_outfit a skos:Concept ;
+    skos:prefLabel "전장재"@ko ;
+    skos:inScheme bc:scheme.part_kind ;
+    skos:topConceptOf bc:scheme.part_kind ;
+    bo:draft true ;
+    skos:narrower bc:part_kind.electrical_bracket ;
+    skos:narrower bc:part_kind.cable_tray ;
+    skos:narrower bc:part_kind.control_box .
+bc:part_kind.electrical_bracket skos:broader bc:part_kind.group.electrical_outfit ;
+    skos:altLabel "전선 브래킷"@ko ;
+    skos:altLabel "전장 서포트"@ko .
+bc:part_kind.cable_tray skos:broader bc:part_kind.group.electrical_outfit ;
+    skos:altLabel "전선 트레이"@ko ;
+    skos:altLabel "케이블 래더"@ko .
+bc:part_kind.control_box skos:broader bc:part_kind.group.electrical_outfit ;
+    skos:altLabel "컨트롤 박스"@ko ;
+    skos:altLabel "제어반"@ko ;
+    skos:altLabel "판넬"@ko .
+bc:part_kind.group.fire_accommodation a skos:Concept ;
+    skos:prefLabel "방화 · 거주구 의장"@ko ;
+    skos:inScheme bc:scheme.part_kind ;
+    skos:topConceptOf bc:scheme.part_kind ;
+    bo:draft true ;
+    skos:narrower bc:part_kind.fire_door .
+bc:part_kind.fire_door skos:broader bc:part_kind.group.fire_accommodation ;
+    skos:altLabel "방화 도어"@ko ;
+    skos:altLabel "A-60 도어"@ko ;
+    skos:altLabel "A-0 도어"@ko .
+bc:part_kind.group.coating_insulation a skos:Concept ;
+    skos:prefLabel "도장 · 단열"@ko ;
+    skos:inScheme bc:scheme.part_kind ;
+    skos:topConceptOf bc:scheme.part_kind ;
+    bo:draft true ;
+    skos:narrower bc:part_kind.insulation ;
+    skos:narrower bc:part_kind.paint_repair .
+bc:part_kind.insulation skos:broader bc:part_kind.group.coating_insulation ;
+    skos:altLabel "단열재"@ko ;
+    skos:altLabel "보온재"@ko ;
+    skos:altLabel "인슐레이션"@ko .
+bc:part_kind.paint_repair skos:broader bc:part_kind.group.coating_insulation ;
+    skos:altLabel "도장 보수"@ko ;
+    skos:altLabel "터치업"@ko .
+bc:part_kind.group.deck_outfit a skos:Concept ;
+    skos:prefLabel "갑판 의장"@ko ;
+    skos:inScheme bc:scheme.part_kind ;
+    skos:topConceptOf bc:scheme.part_kind ;
+    bo:draft true ;
+    skos:narrower bc:part_kind.deck_accessory .
+bc:part_kind.deck_accessory skos:broader bc:part_kind.group.deck_outfit ;
+    skos:altLabel "계류 설비"@ko ;
+    skos:altLabel "계류 받침"@ko ;
+    skos:altLabel "볼라드"@ko .

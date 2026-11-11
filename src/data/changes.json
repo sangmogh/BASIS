@@ -1,0 +1,267 @@
+[
+  {
+    "code": "DC-016",
+    "ecr": "ECR-2026-0365",
+    "title": "E21 맨홀 위치 이동",
+    "reason": "개선",
+    "requester": "선체설계팀",
+    "receivedOn": "2026-10-02",
+    "status": "withdrawn",
+    "boundary": "production",
+    "block": "E21",
+    "member": "MH-E21-02 맨홀",
+    "v1": "프레임 42",
+    "v2": "프레임 44",
+    "ecrText": "E21 맨홀 위치 이동에 대한 합성 변경 검토 요청입니다. 대상은 E21 구역의 MH-E21-02 맨홀이며 현재 사양은 프레임 42입니다. 요청 사양은 프레임 44 (철회)이고 요청 사유는 개선입니다. 관련 부서가 생산 단계와 기술·조달 조건을 확인한 뒤 결정해야 합니다.",
+    "drawing": {
+      "no": "DWG-E21-MH-02",
+      "from": "Rev.A",
+      "to": "Rev.B",
+      "note": "맨홀 위치"
+    },
+    "features": {
+      "part": "맨홀",
+      "trade": "선체",
+      "types": [
+        "위치 이동"
+      ],
+      "zone": "화물창 배관 (E)"
+    }
+  },
+  {
+    "code": "DC-018",
+    "ecr": "ECR-2026-0379",
+    "title": "E11 용접 기호 표기 통일",
+    "reason": "개선",
+    "requester": "선체설계팀",
+    "receivedOn": "2026-10-12",
+    "status": "notified",
+    "boundary": "design",
+    "block": "E11",
+    "member": "용접 기호",
+    "v1": "형상 변경 없음",
+    "v2": "Rev.A1",
+    "ecrText": "E11 용접 기호 표기 통일에 대한 합성 변경 검토 요청입니다. 대상은 E11 구역의 용접 기호이며 현재 사양은 기존 용접 기호입니다. 요청 사양은 표준 표기 적용 (형상 변화 없음)이고 요청 사유는 개선입니다. 관련 부서가 생산 단계와 기술·조달 조건을 확인한 뒤 결정해야 합니다.",
+    "drawing": {
+      "no": "DWG-E11-WD-04",
+      "from": "Rev.A",
+      "to": "Rev.A1",
+      "note": "용접 기호 표기만 통일"
+    },
+    "features": {
+      "part": "용접부",
+      "trade": "선체",
+      "types": [],
+      "zone": "화물창 (E)"
+    },
+    "readBy": [
+      "설계",
+      "생산"
+    ]
+  },
+  {
+    "code": "DC-019",
+    "ecr": "ECR-2026-0398",
+    "title": "거주구 A데크 방화문 등급 상향",
+    "reason": "선급·규정",
+    "requester": "의장설계팀",
+    "receivedOn": "2026-10-20",
+    "status": "review",
+    "boundary": "production",
+    "block": "A41",
+    "member": "FD-A41-03 방화문",
+    "v1": "A-0 등급 방화문",
+    "v2": "A-60 등급 방화문 (문틀 보강)",
+    "ecrText": "거주구 A데크 방화문 등급 상향에 대한 합성 변경 검토 요청입니다. 대상은 A41 구역의 FD-A41-03 방화문이며 현재 사양은 A-0입니다. 요청 사양은 A-60 + 문틀 보강이고 요청 사유는 선급·규정입니다. 관련 부서가 생산 단계와 기술·조달 조건을 확인한 뒤 결정해야 합니다.",
+    "drawing": {
+      "no": "DWG-A41-FD-03",
+      "from": "Rev.A",
+      "to": "Rev.B",
+      "note": "방화문 등급과 문틀 보강 상세"
+    },
+    "bom": [
+      {
+        "op": "-",
+        "item": "방화문 A-0 (900×2000)",
+        "qty": "2개/척"
+      },
+      {
+        "op": "+",
+        "item": "방화문 A-60 (900×2000)",
+        "qty": "2개/척"
+      },
+      {
+        "op": "+",
+        "item": "문틀 보강재 L75",
+        "qty": "8m/척"
+      }
+    ],
+    "material": {
+      "item": "방화문 A-60",
+      "code": "FD-A60-0920",
+      "stock": 1,
+      "leadTime": 15,
+      "old": {
+        "item": "방화문 A-0",
+        "open": 4
+      },
+      "unitCost": 450
+    },
+    "features": {
+      "part": "방화문",
+      "trade": "의장",
+      "types": [
+        "등급·사양 변경",
+        "자재 교체"
+      ],
+      "zone": "거주구 (A)"
+    },
+    "auto": true,
+    "options": {
+      "expedite": {
+        "leadTime": 9,
+        "premium": 1800
+      }
+    }
+  },
+  {
+    "code": "DC-020",
+    "ecr": "ECR-2026-0401",
+    "title": "A41 의장품 부재 번호 체계 정리",
+    "reason": "개선",
+    "requester": "의장설계팀",
+    "receivedOn": "2026-10-22",
+    "status": "notified",
+    "boundary": "design",
+    "block": "A41",
+    "member": "의장품 번호",
+    "v1": "형상 변경 없음",
+    "v2": "Rev.C1",
+    "ecrText": "A41 의장품 부재 번호 체계 정리에 대한 합성 변경 검토 요청입니다. 대상은 A41 구역의 의장품 번호이며 현재 사양은 기존 부재 번호입니다. 요청 사양은 부재 번호 정리 (형상 변화 없음)이고 요청 사유는 개선입니다. 관련 부서가 생산 단계와 기술·조달 조건을 확인한 뒤 결정해야 합니다.",
+    "drawing": {
+      "no": "DWG-A41-OF-01",
+      "from": "Rev.C",
+      "to": "Rev.C1",
+      "note": "부재 번호만 바뀜"
+    },
+    "features": {
+      "part": "의장품",
+      "trade": "의장",
+      "types": [],
+      "zone": "거주구 (A)"
+    },
+    "readBy": [
+      "설계",
+      "구매",
+      "생산"
+    ]
+  },
+  {
+    "code": "DC-021",
+    "ecr": "ECR-2026-0412",
+    "title": "LNG 화물배관 서포트 두께 상향",
+    "reason": "선주 요청",
+    "requester": "선체설계팀",
+    "receivedOn": "2026-10-27",
+    "status": "review",
+    "boundary": "production",
+    "block": "E21",
+    "member": "PS-E21-07 화물배관 서포트",
+    "v1": "서포트 판 두께 12t",
+    "v2": "두께 16t + 보강 리브 1개",
+    "ecrText": "LNG 화물배관 서포트 두께 상향에 대한 합성 변경 검토 요청입니다. 대상은 E21 구역의 PS-E21-07 화물배관 서포트이며 현재 사양은 서포트 판 12t입니다. 요청 사양은 서포트 판 16t + 보강 리브 1개이고 요청 사유는 선주 요청입니다. 관련 부서가 생산 단계와 기술·조달 조건을 확인한 뒤 결정해야 합니다.",
+    "drawing": {
+      "no": "DWG-E21-PS-07",
+      "from": "Rev.B",
+      "to": "Rev.C",
+      "note": "서포트 판 두께와 리브 상세 개정"
+    },
+    "bom": [
+      {
+        "op": "-",
+        "item": "강판 12t (AH36)",
+        "qty": "0.8t/척"
+      },
+      {
+        "op": "+",
+        "item": "강판 16t (EH36)",
+        "qty": "1.1t/척"
+      },
+      {
+        "op": "+",
+        "item": "보강 리브 FB 100×10",
+        "qty": "24개/척"
+      }
+    ],
+    "material": {
+      "item": "강판 16t (EH36)",
+      "code": "ST-EH36-16",
+      "stock": 1,
+      "leadTime": 14,
+      "old": {
+        "item": "강판 12t (AH36)",
+        "open": 3
+      },
+      "unitCost": 900
+    },
+    "features": {
+      "part": "배관 서포트",
+      "trade": "배관",
+      "types": [
+        "두께·치수 변경",
+        "자재 교체"
+      ],
+      "zone": "화물창 배관 (E)"
+    },
+    "auto": true,
+    "isNew": true,
+    "options": {
+      "expedite": {
+        "leadTime": 5,
+        "premium": 2500
+      },
+      "reinforce": {
+        "days": 4,
+        "daysErected": 12,
+        "cost": 200,
+        "approvalDays": 10,
+        "approvals": [
+          "선주",
+          "선급"
+        ],
+        "note": "기존 12t 서포트에 덧판(더블러)과 리브를 덧대 보강"
+      }
+    }
+  },
+  {
+    "code": "DC-023",
+    "ecr": "ECR-2026-0419",
+    "title": "E21 배관 서포트 도면 치수선 표기 수정",
+    "reason": "내부 오류",
+    "requester": "배관설계팀",
+    "receivedOn": "2026-10-26",
+    "status": "notified",
+    "boundary": "design",
+    "block": "E21",
+    "member": "배관 서포트 도면",
+    "v1": "형상 변경 없음",
+    "v2": "Rev.B1",
+    "ecrText": "E21 배관 서포트 도면 치수선 표기 수정에 대한 합성 변경 검토 요청입니다. 대상은 E21 구역의 배관 서포트 도면이며 현재 사양은 기존 치수선 표기입니다. 요청 사양은 표기 오류 정정 (형상 변화 없음)이고 요청 사유는 내부 오류입니다. 관련 부서가 생산 단계와 기술·조달 조건을 확인한 뒤 결정해야 합니다.",
+    "drawing": {
+      "no": "DWG-E21-PS-07",
+      "from": "Rev.B",
+      "to": "Rev.B1",
+      "note": "치수선 표기만 수정, 형상 변경 없음"
+    },
+    "features": {
+      "part": "배관 서포트",
+      "trade": "배관",
+      "types": [],
+      "zone": "화물창 배관 (E)"
+    },
+    "readBy": [
+      "설계",
+      "생산"
+    ]
+  }
+]

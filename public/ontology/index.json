@@ -1,0 +1,51 @@
+{
+  "schema": {
+    "file": "schema.ttl",
+    "triples": 3794,
+    "hash": "d83114e747dc"
+  },
+  "datasets": [
+    {
+      "id": "lng10",
+      "name": "174K LNG 운반선 A · 10척 (팀원 DB 기반)",
+      "asOf": "2026-10-29T09:04:00Z",
+      "file": "lng10.ttl",
+      "triples": 42430
+    },
+    {
+      "id": "bulk12",
+      "name": "180K 벌크선 · 12척 (초기 단계)",
+      "asOf": "2026-10-29T09:04:00Z",
+      "file": "bulk12.ttl",
+      "triples": 26336
+    },
+    {
+      "id": "cont8",
+      "name": "24,000TEU 컨테이너선 · 8척",
+      "asOf": "2026-10-29T09:04:00Z",
+      "file": "cont8.ttl",
+      "triples": 25195
+    },
+    {
+      "id": "lng4",
+      "name": "174K LNG 운반선 B · 4척 (인도 임박)",
+      "asOf": "2026-10-29T09:04:00Z",
+      "file": "lng4.ttl",
+      "triples": 22346
+    },
+    {
+      "id": "lpg6",
+      "name": "91K VLGC (LPG 운반선) · 6척",
+      "asOf": "2026-10-29T09:04:00Z",
+      "file": "lpg6.ttl",
+      "triples": 23115
+    },
+    {
+      "id": "tank5",
+      "name": "158K 수에즈막스 유조선 · 5척",
+      "asOf": "2026-10-29T09:04:00Z",
+      "file": "tank5.ttl",
+      "triples": 22877
+    }
+  ]
+}

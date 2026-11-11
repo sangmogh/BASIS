@@ -1,0 +1,24 @@
+# Node
+node_modules/
+dist/
+
+# Vercel
+.vercel/
+
+# 팀원 원본 데이터 (대시보드가 쓰는 JSON은 src/data/에 따로 둔다)
+/data/
+
+# 비밀값 (API 키 등은 절대 커밋하지 않음)
+.env
+.env.*
+!.env.example
+
+# Python (데이터 변환 스크립트용)
+__pycache__/
+.venv/
+
+# 편집기/OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

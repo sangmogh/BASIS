@@ -1,0 +1,7 @@
+# Vercel에 올리지 않는 것
+/data
+.env
+.env.*
+!.env.example
+node_modules
+dist

@@ -1,0 +1,42 @@
+/* 로그인 화면: 지금 디자인 시스템(색 · 카드 · 버튼 · 알약)만 쓴다 */
+.login-page { min-height: 100vh; background: radial-gradient(circle at 72% 20%, rgba(31,79,143,.07), transparent 30%), var(--bg); }
+.login-main { width: min(960px, calc(100vw - 32px)); margin: 0 auto; padding: 80px 0 48px; }
+.login-box { width: min(400px, 100%); margin: 0 auto; padding: 32px 32px 28px; }
+.login-brand { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 6px 0 26px; }
+.login-brand .brand-mark { width: 40px; height: 40px; }
+.login-brand .brand-word { width: 86px; height: 20px; }
+.login-box h1 { font-size: 22px; letter-spacing: -.02em; }
+.login-sub { margin-top: 6px; color: var(--text-mid); font-size: 13px; line-height: 1.5; }
+.login-form { display: flex; flex-direction: column; gap: 14px; }
+.login-form label { display: flex; flex-direction: column; gap: 6px; color: var(--text-mid); font-size: 12.5px; font-weight: 700; }
+.login-form input { height: 40px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--text); font-size: 14px; }
+.login-form input:focus { outline: 2px solid var(--primary-light); border-color: var(--primary); }
+.login-form .primary-button { height: 42px; margin-top: 4px; font-size: 14px; }
+.login-form .primary-button:disabled { opacity: .45; cursor: not-allowed; }
+.login-error { padding: 9px 12px; border-radius: 8px; background: var(--danger-light); color: var(--danger); font-size: 12.5px; font-weight: 700; }
+.login-note { margin-top: 16px; color: var(--text-light); font-size: 12px; text-align: center; }
+.login-demo { display: flex; flex-direction: column; align-items: center; margin-top: 22px; }
+.login-demo-body { width: 100%; margin-top: 18px; }
+.login-group { margin-bottom: 22px; }
+.login-group-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.login-group-head h2 { font-size: 15px; }
+.login-group-head span { color: var(--text-light); font-size: 12.5px; }
+.login-accounts { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.login-account { display: flex; flex-direction: column; gap: 5px; padding: 14px 16px; text-align: left; cursor: pointer; }
+.login-account:hover:not(:disabled) { border-color: #b9c8db; box-shadow: 0 2px 4px rgba(20,34,53,.06), 0 10px 24px rgba(20,34,53,.10); }
+.login-account:disabled { cursor: wait; opacity: .7; }
+.login-account-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.login-account-top strong { font-size: 16px; }
+.login-account-dept { color: var(--text-mid); font-size: 12.5px; line-height: 1.4; }
+.login-account-id { color: var(--text-light); font-size: 12px; }
+.login-hint { margin-top: 6px; color: var(--text-light); font-size: 12.5px; }
+.login-hint code { padding: 1px 5px; border-radius: 4px; background: #e4e9ef; color: var(--text-mid); }
+/* 헤더의 로그인한 사람 */
+.user-chip { display: flex; align-items: center; gap: 8px; margin-left: auto; color: var(--text-mid); font-size: 12.5px; }
+.user-chip strong { color: var(--text); }
+.user-chip button { height: 28px; padding: 0 10px; border: 1px solid var(--line); border-radius: 7px; background: white; color: var(--text-mid); font-size: 12px; font-weight: 700; cursor: pointer; }
+.user-chip button:hover { background: var(--surface); }
+@media (max-width: 640px) {
+  .login-main { padding-top: 32px; }
+  .login-box { padding: 24px 20px 20px; }
+}

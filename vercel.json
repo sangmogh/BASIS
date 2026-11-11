@@ -1,0 +1,11 @@
+{
+  "functions": {
+    "api/review.ts": { "includeFiles": "{db/**,public/ontology/**,node_modules/oxigraph/**}" },
+    "api/explain.ts": { "includeFiles": "{db/**,public/ontology/**,node_modules/oxigraph/**}" },
+    "api/records.ts": { "includeFiles": "{db/**,public/ontology/**,node_modules/oxigraph/**}" },
+    "api/datasets.ts": { "includeFiles": "{db/**,public/ontology/**,node_modules/oxigraph/**}" },
+    "api/auth.ts": { "includeFiles": "db/**" },
+    "api/match.ts": { "includeFiles": "{public/ontology/**,node_modules/oxigraph/**}" },
+    "api/cases.ts": { "includeFiles": "{db/**,public/ontology/**,node_modules/oxigraph/**}" }
+  }
+}
